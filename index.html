@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pune Village Helpline</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Feather Icons for icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        /* Interactive Animated Gradient Background */
+        .interactive-bg {
+            background: linear-gradient(-45deg, #111827, #1F2937, #374151, #111827);
+            background-size: 400% 400%;
+            animation: gradientBG 25s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937; /* bg-gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563; /* bg-gray-600 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280; /* bg-gray-500 */
+        }
+        
+        /* Style for the search input cancel button */
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239CA3AF'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+            cursor: pointer;
+        }
+        
+        /* Active category tab style */
+        .category-tab.active {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <!-- Landing Page Section -->
+    <div id="landingPage" class="interactive-bg flex flex-col items-center justify-center min-h-screen p-6 text-center">
+        <div class="max-w-md">
+            <div class="mb-6">
+                <i data-feather="life-buoy" class="w-20 h-20 text-blue-400 mx-auto"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white">Pune Village Helpline</h1>
+            <p class="text-lg text-gray-300 mt-4">पुणे गाव हेल्पलाईन</p>
+            <p class="mt-4 text-gray-400">Your one-tap directory for all emergency and essential services in the Pune & PCMC region. Quick, simple, and reliable.</p>
+            <button id="enterButton" class="mt-8 w-full bg-blue-600 text-white font-bold py-4 px-8 rounded-xl text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400">
+                Enter Directory
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App Section (Initially Hidden) -->
+    <div id="mainApp" class="hidden interactive-bg container mx-auto max-w-2xl p-4 min-h-screen flex-col">
+        <!-- Header Section -->
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-blue-400">Helpline Directory</h1>
+            <p class="text-gray-400 mt-1">पुणे आणि पिंपरी-चिंचवड</p>
+        </header>
+
+        <!-- Search Bar Section -->
+        <div class="sticky top-0 bg-gray-900/80 backdrop-blur-sm pt-2 pb-4 z-10">
+            <div class="relative">
+                <input type="search" id="searchInput" placeholder="Search all services..."
+                    class="w-full p-4 pl-12 text-lg bg-gray-800 text-white border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 transition duration-300 shadow-lg">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i data-feather="search" class="text-gray-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div id="categoryTabs" class="flex space-x-2 p-1 bg-gray-800 rounded-xl mb-6 overflow-x-auto">
+            <!-- Tabs will be injected here -->
+        </div>
+
+        <!-- Helpline List Section -->
+        <main id="helplineList" class="flex-grow space-y-6 pb-4">
+            <!-- Contact categories and items will be injected here -->
+        </main>
+        
+        <!-- Not Found Message -->
+        <div id="notFoundMessage" class="hidden text-center py-10">
+            <i data-feather="alert-circle" class="w-16 h-16 text-gray-500 mx-auto"></i>
+            <p class="text-lg text-gray-400 mt-4">No services found for your search.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- Expanded Database for Pune & PCMC Helpline Numbers ---
+        const helplineData = [
+            { category: 'Emergency', service: 'Police', name: 'पोलीस', phone: '100', address: 'Citywide Emergency Service' },
+            { category: 'Emergency', service: 'Ambulance', name: 'रुग्णवाहिका', phone: '108', address: 'Statewide Medical Emergency' },
+            { category: 'Emergency', service: 'Fire Brigade', name: 'अग्निशमन दल', phone: '101', address: 'Citywide Fire Emergency' },
+            { category: 'Emergency', service: 'Disaster Management', name: 'आपत्ती व्यवस्थापन', phone: '1077', address: 'District Control Room, Pune' },
+            { category: 'Emergency', service: 'Traffic Police (Pune)', name: 'वाहतूक पोलीस (पुणे)', phone: '02026122000', address: 'Near Yerwada Post Office, Pune' },
+
+            { category: 'Medical', service: 'Sassoon General Hospital', name: 'ससून सर्वोपचार रुग्णालय', phone: '02026128000', address: 'Station Road, Pune' },
+            { category: 'Medical', service: 'KEM Hospital', name: 'केईएम रुग्णालय', phone: '02066037373', address: 'Rasta Peth, Pune' },
+            { category: 'Medical', service: 'Jehangir Hospital', name: 'जहांगीर रुग्णालय', phone: '02066819999', address: 'Sassoon Road, Pune' },
+            { category: 'Medical', service: 'Ruby Hall Clinic', name: 'रूबी हॉल क्लिनिक', phone: '02066455100', address: 'Sassoon Road, Pune' },
+            { category: 'Medical', service: 'Deenanath Mangeshkar Hospital', name: 'दीनानाथ मंगेशकर रुग्णालय', phone: '02040151000', address: 'Erandwane, Pune' },
+            { category: 'Medical', service: 'Aditya Birla Memorial Hospital', name: 'आदित्य बिर्ला मेमोरियल हॉस्पिटल', phone: '02030717500', address: 'Chinchwad, PCMC' },
+            { category: 'Medical', service: 'YCM Hospital, PCMC', name: 'यशवंतराव चव्हाण रुग्णालय', phone: '02067332222', address: 'Pimpri, PCMC' },
+
+            { category: 'Helplines', service: 'Women Helpline', name: 'महिला हेल्पलाइन', phone: '1091', address: 'National Helpline for Women' },
+            { category: 'Helplines', service: 'Child Helpline', name: 'चाइल्ड हेल्पलाइन', phone: '1098', address: 'National Helpline for Children' },
+            { category: 'Helplines', service: 'Senior Citizen Helpline', name: 'ज्येष्ठ नागरिक हेल्पलाइन', phone: '1090', address: 'Local Support for Seniors' },
+            
+            { category: 'Utilities', service: 'MSEDCL (Electricity)', name: 'महावितरण (वीज)', phone: '1912', address: 'Statewide Electricity Board' },
+            { category: 'Utilities', service: 'PMC Water Supply', name: 'पुणे मनपा पाणी पुरवठा', phone: '02025501000', address: 'PMC Head Office, Shivajinagar' },
+            { category: 'Utilities', service: 'PCMC Water Supply', name: 'पिंपरी-चिंचवड पाणी पुरवठा', phone: '02067333333', address: 'PCMC Main Building, Pimpri' },
+            { category: 'Utilities', service: 'MNGL Gas Leak', name: 'MNGL गॅस गळती', phone: '18002662696', address: 'Emergency Gas Leak Helpline' },
+
+            { category: 'Government', service: 'Pune Collector Office', name: 'पुणे जिल्हाधिकारी कार्यालय', phone: '02026122114', address: 'Camp, Pune' },
+            { category: 'Government', service: 'PMC Head Office', name: 'पुणे महानगरपालिका', phone: '02025501000', address: 'Shivajinagar, Pune' },
+            { category: 'Government', service: 'PCMC Head Office', name: 'पिंपरी-चिंचवड महानगरपालिका', phone: '02027425511', address: 'Pimpri, PCMC' },
+            
+            { category: 'Transport', service: 'Pune Railway Station', name: 'पुणे रेल्वे स्टेशन', phone: '139', address: 'Station Road, Pune' },
+            { category: 'Transport', service: 'Pune Airport', name: 'पुणे विमानतळ', phone: '02026683232', address: 'Lohegaon, Pune' },
+            { category: 'Transport', service: 'Swargate Bus Stand (MSRTC)', name: 'स्वारगेट बस स्टँड', phone: '02024442244', address: 'Swargate, Pune' },
+
+            { category: 'Animal Care', service: 'Govt. Veterinary Polyclinic', name: 'शासकीय पशुवैद्यकीय', phone: '02025654212', address: 'Aundh, Pune' },
+            { category: 'Animal Care', service: 'ResQ Charitable Trust', name: 'रेस्क्यू चॅरिटेबल ट्रस्ट', phone: '09890999111', address: 'Bavdhan, Pune' },
+        ];
+
+        // --- DOM Elements ---
+        const landingPage = document.getElementById('landingPage');
+        const mainApp = document.getElementById('mainApp');
+        const enterButton = document.getElementById('enterButton');
+        const helplineList = document.getElementById('helplineList');
+        const searchInput = document.getElementById('searchInput');
+        const notFoundMessage = document.getElementById('notFoundMessage');
+        const categoryTabsContainer = document.getElementById('categoryTabs');
+
+        // --- Functions ---
+
+        /**
+         * Groups contacts by their category.
+         * @returns {Object} An object with categories as keys and arrays of contacts as values.
+         */
+        function getContactsByCategory() {
+            return helplineData.reduce((acc, contact) => {
+                (acc[contact.category] = acc[contact.category] || []).push(contact);
+                return acc;
+            }, {});
+        }
+
+        /**
+         * Renders the list of helpline contacts, grouped by category.
+         * @param {Array} contacts - The array of contact objects to display.
+         */
+        function renderList(contacts) {
+            helplineList.innerHTML = '';
+            
+            const filteredContactsByCategory = contacts.reduce((acc, contact) => {
+                (acc[contact.category] = acc[contact.category] || []).push(contact);
+                return acc;
+            }, {});
+
+            const hasContacts = Object.keys(filteredContactsByCategory).length > 0;
+            notFoundMessage.classList.toggle('hidden', hasContacts);
+            
+            if (!hasContacts) return;
+
+            for (const category in filteredContactsByCategory) {
+                const categoryWrapper = document.createElement('div');
+                categoryWrapper.id = `category-${category.replace(/\s+/g, '-')}`;
+                
+                const categoryTitle = document.createElement('h2');
+                categoryTitle.className = 'text-2xl font-bold text-blue-300 mb-4';
+                categoryTitle.textContent = category;
+                categoryWrapper.appendChild(categoryTitle);
+
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+
+                filteredContactsByCategory[category].forEach(contact => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-gray-800/50 p-5 rounded-xl shadow-lg border border-gray-700 flex flex-col justify-between transition-all duration-300 hover:border-blue-500 hover:shadow-blue-500/10 hover:scale-[1.02]';
+
+                    // Contact info section
+                    const infoDiv = document.createElement('div');
+                    
+                    const serviceP = document.createElement('p');
+                    serviceP.className = 'text-xl font-semibold text-white';
+                    serviceP.textContent = contact.service;
+                    
+                    const nameP = document.createElement('p');
+                    nameP.className = 'text-md text-gray-400 mb-3';
+                    nameP.textContent = contact.name;
+                    
+                    const addressDiv = document.createElement('div');
+                    addressDiv.className = 'flex items-start text-gray-300 text-sm mt-2';
+                    const addressIcon = document.createElement('i');
+                    addressIcon.setAttribute('data-feather', 'map-pin');
+                    addressIcon.className = 'w-4 h-4 mr-2 mt-1 flex-shrink-0 text-gray-400';
+                    const addressP = document.createElement('p');
+                    addressP.textContent = contact.address;
+                    addressDiv.appendChild(addressIcon);
+                    addressDiv.appendChild(addressP);
+
+                    infoDiv.appendChild(serviceP);
+                    infoDiv.appendChild(nameP);
+                    infoDiv.appendChild(addressDiv);
+
+                    // Call button section
+                    const callButton = document.createElement('a');
+                    callButton.href = `tel:${contact.phone}`;
+                    callButton.className = 'mt-4 w-full bg-green-600 text-white font-bold py-3 px-5 rounded-lg flex items-center justify-center space-x-2 transition-colors hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-400 active:scale-95';
+                    
+                    const callIcon = document.createElement('i');
+                    callIcon.setAttribute('data-feather', 'phone-call');
+                    callIcon.setAttribute('stroke-width', '2.5');
+                    callIcon.setAttribute('width', '20');
+                    callIcon.setAttribute('height', '20');
+                    
+                    const callText = document.createElement('span');
+                    callText.textContent = `Call ${contact.phone}`;
+
+                    callButton.appendChild(callIcon);
+                    callButton.appendChild(callText);
+                    
+                    item.appendChild(infoDiv);
+                    item.appendChild(callButton);
+                    grid.appendChild(item);
+                });
+                
+                categoryWrapper.appendChild(grid);
+                helplineList.appendChild(categoryWrapper);
+            }
+            
+            feather.replace();
+        }
+
+        /**
+         * Renders the category tabs.
+         */
+        function renderCategoryTabs() {
+            const categories = Object.keys(getContactsByCategory());
+            categories.unshift('All'); // Add 'All' tab at the beginning
+            
+            categories.forEach(category => {
+                const tab = document.createElement('button');
+                tab.className = 'category-tab flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-300 rounded-lg transition-colors duration-200';
+                tab.textContent = category;
+                tab.dataset.category = category;
+                if (category === 'All') {
+                    tab.classList.add('active');
+                }
+                tab.addEventListener('click', () => handleCategoryClick(category));
+                categoryTabsContainer.appendChild(tab);
+            });
+        }
+        
+        /**
+         * Handles clicking on a category tab.
+         * @param {string} category - The selected category.
+         */
+        function handleCategoryClick(category) {
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.category-tab[data-category="${category}"]`).classList.add('active');
+
+            searchInput.value = ''; // Clear search on tab change
+
+            if (category === 'All') {
+                renderList(helplineData);
+            } else {
+                const filtered = helplineData.filter(c => c.category === category);
+                renderList(filtered);
+            }
+        }
+
+        /**
+         * Filters the helpline data based on the search input.
+         */
+        function filterContacts() {
+            const query = searchInput.value.toLowerCase().trim();
+            // Reset active tab to 'All' when searching
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.category-tab[data-category="All"]').classList.add('active');
+
+            const filteredData = helplineData.filter(contact =>
+                contact.service.toLowerCase().includes(query) ||
+                contact.name.toLowerCase().includes(query) ||
+                contact.address.toLowerCase().includes(query) ||
+                contact.phone.includes(query)
+            );
+            renderList(filteredData);
+        }
+
+        // --- Event Listeners ---
+        
+        // Listen for click on the enter button
+        enterButton.addEventListener('click', () => {
+            landingPage.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            mainApp.classList.add('flex', 'fade-in');
+        });
+
+        // Listen for input in the search bar
+        searchInput.addEventListener('keyup', filterContacts);
+        searchInput.addEventListener('search', filterContacts);
+
+        // --- Initial Load ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace(); // Initial icon render for landing page
+            renderCategoryTabs();
+            renderList(helplineData);
+        });
+    </script>
+</body>
+</html>
