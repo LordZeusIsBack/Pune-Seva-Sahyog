@@ -3,351 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pune Village Helpline</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Pune Seva Sahyog</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Feather Icons for icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
     <style>
-        /* Custom styles */
+        /* CSS Variables for Theming */
+        :root, [data-theme="dark"] {
+            --bg-primary: #0c0a18; --bg-secondary: #1b2735; --text-primary: #e5e7eb; --text-secondary: #9ca3af;
+            --text-gradient-start: #4f46e5; --text-gradient-end: #14b8a6; --accent-color: #14b8a6;
+            --card-bg: rgba(23, 27, 46, 0.4); --card-bg-hover: rgba(36, 42, 71, 0.5); --card-border: rgba(255, 255, 255, 0.1);
+            --card-border-hover: rgba(255, 255, 255, 0.2); --scrollbar-thumb: #4f46e5; --scrollbar-thumb-hover: #14b8a6;
+        }
+        [data-theme="light"] {
+            --bg-primary: #f9fafb; --bg-secondary: #e5e7eb; --text-primary: #1f2937; --text-secondary: #4b5563;
+            --text-gradient-start: #4f46e5; --text-gradient-end: #047857; --accent-color: #059669;
+            --card-bg: rgba(255, 255, 255, 0.7); --card-bg-hover: rgba(255, 255, 255, 1); --card-border: rgba(0, 0, 0, 0.1);
+            --card-border-hover: rgba(0, 0, 0, 0.15); --scrollbar-thumb: #059669; --scrollbar-thumb-hover: #047857;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-            background-color: #111827; /* bg-gray-900 */
+            font-family: 'Inter', sans-serif; scroll-behavior: smooth;
+            background-color: var(--bg-primary); color: var(--text-primary); transition: background-color 0.3s, color 0.3s;
         }
-        /* Interactive Animated Gradient Background */
-        .interactive-bg {
-            background: linear-gradient(-45deg, #111827, #1F2937, #374151, #111827);
-            background-size: 400% 400%;
-            animation: gradientBG 25s ease infinite;
+        .bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1;
+            background: radial-gradient(ellipse at bottom, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            overflow: hidden; transition: background 0.3s;
         }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes move-stars { from {transform: translateY(0px);} to {transform: translateY(-2000px);} }
+        .stars {
+            position: absolute; top: 0; width: 2px; height: 2px; background: #fff; border-radius: 50%;
+            animation: move-stars 20s linear infinite;
         }
-
-        /* Custom scrollbar for dark theme */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .glass-card {
+            background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border); transition: background 0.3s, border 0.3s, transform 0.3s;
         }
-        ::-webkit-scrollbar-track {
-            background: #1F2937; /* bg-gray-800 */
+        .glass-card:hover {
+            background: var(--card-bg-hover); border: 1px solid var(--card-border-hover); transform: translateY(-5px);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #4B5563; /* bg-gray-600 */
-            border-radius: 10px;
+        .gradient-text {
+            background: linear-gradient(90deg, var(--text-gradient-start), var(--text-gradient-end));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6B7280; /* bg-gray-500 */
+        .gradient-border-active { border-color: var(--accent-color) !important; color: var(--text-primary) !important; font-weight: bold; }
+        .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal-on-scroll.revealed { opacity: 1; transform: translateY(0); }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        .sr-only {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
         }
-        
-        /* Style for the search input cancel button */
-        input[type="search"]::-webkit-search-cancel-button {
-            -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239CA3AF'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
-            cursor: pointer;
+        .action-icon {
+            padding: 8px; border-radius: 9999px; transition: background-color 0.2s;
         }
-        
-        /* Active category tab style */
-        .category-tab.active {
-            background-color: #3B82F6; /* blue-500 */
-            color: white;
-            font-weight: 600;
-        }
-        
-        /* Fade-in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+        .action-icon:hover {
+            background-color: var(--card-bg-hover);
         }
     </style>
 </head>
-<body class="text-gray-200">
+<body>
 
-    <!-- Landing Page Section -->
-    <div id="landingPage" class="interactive-bg flex flex-col items-center justify-center min-h-screen p-6 text-center">
-        <div class="max-w-md">
-            <div class="mb-6">
-                <i data-feather="life-buoy" class="w-20 h-20 text-blue-400 mx-auto"></i>
-            </div>
-            <h1 class="text-4xl font-bold text-white">Pune Village Helpline</h1>
-            <p class="text-lg text-gray-300 mt-4">पुणे गाव हेल्पलाईन</p>
-            <p class="mt-4 text-gray-400">Your one-tap directory for all emergency and essential services in the Pune & PCMC region. Quick, simple, and reliable.</p>
-            <button id="enterButton" class="mt-8 w-full bg-blue-600 text-white font-bold py-4 px-8 rounded-xl text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400">
-                Enter Directory
-            </button>
+    <div class="bg-container"><div id="stars-container"></div></div>
+
+    <div id="landingPage" class="flex flex-col items-center justify-center min-h-screen p-6 text-center overflow-hidden transition-opacity duration-500">
+        <div class="relative z-10 fade-in">
+            <div class="mb-6"><i data-feather="life-buoy" aria-hidden="true" class="w-20 h-20 text-teal-300 mx-auto transition-transform duration-300 hover:scale-110"></i></div>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-white"><span class="gradient-text">Pune Seva Sahyog</span></h1>
+            <p data-translate-key="landingDesc" class="mt-4 text-lg text-gray-300 max-w-md mx-auto">Your one-tap directory for all essential services in the Pune & PCMC region.</p>
+            <button id="enterButton" data-translate-key="enter" class="mt-8 bg-indigo-600 text-white font-bold py-4 px-10 rounded-xl text-lg hover:bg-teal-500 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-teal-400">Enter</button>
         </div>
+        <footer class="absolute bottom-6 text-center w-full text-gray-500 text-sm fade-in" style="animation-delay: 0.5s;"><p data-translate-key="credits">Credits: Mohit P. Patil & Parth Ahuja</p></footer>
     </div>
 
-    <!-- Main App Section (Initially Hidden) -->
-    <div id="mainApp" class="hidden interactive-bg container mx-auto max-w-2xl p-4 min-h-screen flex-col">
-        <!-- Header Section -->
-        <header class="text-center mb-6">
-            <h1 class="text-3xl font-bold text-blue-400">Helpline Directory</h1>
-            <p class="text-gray-400 mt-1">पुणे आणि पिंपरी-चिंचवड</p>
+    <div id="mainApp" class="hidden container mx-auto max-w-2xl p-4 min-h-screen flex-col relative z-10 transition-opacity duration-500">
+        <header class="text-center mb-6 pt-4 flex justify-between items-center">
+            <button id="backToHomeBtn" aria-label="Back to Home Page" class="p-2 rounded-full hover:bg-[var(--card-bg)] transition-colors">
+                 <i data-feather="arrow-left" aria-hidden="true" class="text-[var(--text-secondary)]"></i>
+            </button>
+            <div class="flex-grow">
+                <h1 id="main-title" class="text-4xl font-bold gradient-text">Pune Seva Sahyog</h1>
+                <p data-translate-key="subTitle" class="text-[var(--text-secondary)] mt-1">Pune and Pimpri-Chinchwad</p>
+            </div>
+            <div class="flex items-center space-x-1">
+                <div id="languageSwitcher" class="flex items-center space-x-1 glass-card rounded-full p-1 text-xs">
+                    <button data-lang="en" class="lang-btn px-2 py-1 rounded-full">EN</button>
+                    <button data-lang="mr" class="lang-btn px-2 py-1 rounded-full">MR</button>
+                    <button data-lang="hi" class="lang-btn px-2 py-1 rounded-full">HI</button>
+                </div>
+                <button id="themeToggleBtn" aria-label="Toggle Theme" class="p-2 rounded-full hover:bg-[var(--card-bg)] transition-colors">
+                    <i data-feather="sun" id="sunIcon" aria-hidden="true" class="text-[var(--text-secondary)]"></i>
+                    <i data-feather="moon" id="moonIcon" aria-hidden="true" class="hidden text-[var(--text-secondary)]"></i>
+                </button>
+            </div>
         </header>
 
-        <!-- Search Bar Section -->
-        <div class="sticky top-0 bg-gray-900/80 backdrop-blur-sm pt-2 pb-4 z-10">
-            <div class="relative">
-                <input type="search" id="searchInput" placeholder="Search all services..."
-                    class="w-full p-4 pl-12 text-lg bg-gray-800 text-white border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 transition duration-300 shadow-lg">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <i data-feather="search" class="text-gray-500"></i>
+        <section aria-labelledby="search-title">
+            <h2 id="search-title" class="sr-only">Search Services</h2>
+            <div class="sticky top-0 z-20 py-4">
+                <div class="relative glass-card rounded-xl shadow-lg">
+                    <input type="search" id="searchInput" aria-label="Search all services" data-translate-key="searchPlaceholder" placeholder="Search all services..."
+                           class="w-full p-4 pl-12 text-lg bg-transparent text-[var(--text-primary)] rounded-xl focus:outline-none focus:ring-2 ring-[var(--accent-color)] transition duration-300">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-feather="search" aria-hidden="true" class="text-[var(--text-secondary)]"></i>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Category Tabs -->
-        <div id="categoryTabs" class="flex space-x-2 p-1 bg-gray-800 rounded-xl mb-6 overflow-x-auto">
-            <!-- Tabs will be injected here -->
+        <div id="locationLoader" class="hidden text-center py-8">
+            <div role="status">
+                <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 40.0117 89.0077 44.2043 87.6311 48.2868C86.0944 51.9842 83.8217 55.3554 81.0441 58.133C79.1213 60.1221 76.8114 61.7305 74.2498 62.9032C71.6881 64.0759 68.9744 64.8143 66.1991 65.0801C63.4238 65.3459 60.6568 65.1383 57.9893 64.4699C53.7554 63.4352 49.8233 61.2722 46.5054 58.2859C43.8622 55.9359 41.8123 53.0782 40.5284 49.9239C39.3621 47.0408 38.9976 43.9031 39.4928 40.8543C40.0323 37.5255 41.6212 34.4533 44.0225 32.052C46.1508 29.9237 48.9643 28.4211 51.9868 27.7923C53.9454 27.3941 55.9736 27.5706 57.9057 28.3033C59.8378 29.0359 61.6438 30.2946 63.1633 31.9542C64.6828 33.6139 65.8853 35.631 66.6715 37.8381C67.7551 40.7923 67.2142 44.0384 65.3379 46.6875C64.7936 47.3888 63.5415 47.787 62.6466 47.3113C61.7517 46.8356 61.3534 45.5835 61.8978 44.8822C63.2215 42.9879 63.5659 40.6975 62.7797 38.6184C62.1485 36.9324 61.0264 35.4414 59.5533 34.3416C58.0802 33.2418 56.3155 32.5834 54.4923 32.4638C52.6691 32.3442 50.8587 32.766 49.2613 33.682C47.6639 34.598 46.3314 35.9736 45.3999 37.6749C44.1799 39.9233 43.9396 42.5948 44.7219 45.0933C45.7116 48.3324 47.9351 51.1441 50.9576 53.0833C53.9791 55.0225 57.6543 55.9427 61.3545 55.6793C65.0547 55.4158 68.6141 53.9873 71.4991 51.6234C74.3841 49.2594 76.5134 46.079 77.5539 42.545C78.4325 39.5444 78.2163 36.4253 76.9248 33.6323C76.2201 31.9962 75.1457 30.4935 73.7844 29.2435C72.4231 27.9935 70.8113 27.0321 69.0533 26.4358C67.2952 25.8394 65.437 25.6247 63.5878 25.8118C61.7386 25.9989 59.9434 26.5822 58.2937 27.5255C57.0622 28.2439 55.9435 29.1352 54.9937 30.1691C53.3437 31.9211 52.1937 34.0525 51.6937 36.3775C51.1937 38.7025 51.3737 41.1275 52.2337 43.3775C52.8837 45.1275 53.9037 46.7275 55.2037 48.0275C56.5037 49.3275 58.0237 50.2775 59.6237 50.8275C60.9237 51.2775 62.2737 51.4775 63.6237 51.3775C64.9737 51.2775 66.2737 50.8775 67.4237 50.2275C68.4237 49.6775 69.3237 48.9275 70.1237 48.0275C70.9237 47.1275 71.5737 46.1275 72.0737 45.0275C72.5737 43.9275 72.9237 42.7775 73.1237 41.5775C73.3237 40.3775 73.3737 39.1275 73.2737 37.9275C73.1737 36.7275 72.9237 35.5775 72.5237 34.4775C72.0237 33.0775 71.1737 31.7775 70.0737 30.7275C69.2737 29.9275 68.3237 29.2775 67.2737 28.8275C66.2237 28.3775 65.1237 28.1275 63.9737 28.1275C62.8237 28.1275 61.7237 28.3775 60.6737 28.8275C59.6237 29.2775 58.6737 29.9775 57.8737 30.7775L56.7698 1.05124Z" fill="white"/>
+                </svg>
+                <p class="text-[var(--text-secondary)] mt-2" data-translate-key="loaderText">Finding your location to show nearest services...</p>
+            </div>
         </div>
-
-        <!-- Helpline List Section -->
-        <main id="helplineList" class="flex-grow space-y-6 pb-4">
-            <!-- Contact categories and items will be injected here -->
-        </main>
         
-        <!-- Not Found Message -->
+        <div id="categoryTabs" class="flex space-x-2 p-1 mb-6 overflow-x-auto"></div>
+        <main id="helplineList" class="flex-grow space-y-8 pb-4"></main>
+        
+        <div id="search-results-announcer" class="sr-only" aria-live="polite"></div>
         <div id="notFoundMessage" class="hidden text-center py-10">
-            <i data-feather="alert-circle" class="w-16 h-16 text-gray-500 mx-auto"></i>
-            <p class="text-lg text-gray-400 mt-4">No services found for your search.</p>
+            <i data-feather="alert-circle" class="w-16 h-16 text-[var(--text-secondary)] mx-auto"></i>
+            <p data-translate-key="notFound" class="text-lg text-[var(--text-secondary)] mt-4">No services found for your search.</p>
         </div>
     </div>
 
     <script>
-        // --- Expanded Database for Pune & PCMC Helpline Numbers ---
+        const uiStrings = {
+            en: { landingDesc: 'Your one-tap directory for all essential services in the Pune & PCMC region.', enter: 'Enter', credits: 'Credits: Mohit P. Patil & Parth Ahuja', subTitle: 'Pune and Pimpri-Chinchwad', searchPlaceholder: 'Search all services...', notFound: 'No services found for your search.', call: 'Call', distanceAway: 'km away', approx: 'approx.', loaderText: 'Finding your location to show nearest services...', ariaCopy: 'Copy phone number', ariaShare: 'Share contact', ariaMap: 'Show on map' },
+            mr: { landingDesc: 'पुणे आणि पिंपरी-चिंचवड परिसरातील सर्व आवश्यक सेवांसाठी तुमची वन-टॅप डिरेक्टरी.', enter: 'प्रवेश', credits: 'श्रेय: मोहित पी. पाटील आणि पार्थ आहुजा', subTitle: 'पुणे आणि पिंपरी-चिंचवड', searchPlaceholder: 'सर्व सेवा शोधा...', notFound: 'तुमच्या शोधासाठी कोणतीही सेवा आढळली नाही.', call: 'कॉल करा', distanceAway: 'किमी दूर', approx: 'अंदाजे', loaderText: 'जवळच्या सेवा दर्शविण्यासाठी तुमचे स्थान शोधत आहे...', ariaCopy: 'फोन नंबर कॉपी करा', ariaShare: 'संपर्क शेअर करा', ariaMap: 'नकाशावर दर्शवा' },
+            hi: { landingDesc: 'पुणे और पीसीएमसी क्षेत्र में सभी आवश्यक सेवाओं के लिए आपकी वन-टॅप डायरेक्टरी।', enter: 'प्रवेश करें', credits: 'श्रेय: मोहित पी. पाटील और पार्थ आहूजा', subTitle: 'पुणे और पिंपरी-चिंचवड', searchPlaceholder: 'सभी सेवाएं खोजें...', notFound: 'आपकी खोज के लिए कोई सेवा नहीं मिली।', call: 'कॉल करें', distanceAway: 'किमी दूर', approx: 'लगभग', loaderText: 'निकटतम सेवाएं दिखाने के लिए आपका स्थान खोजा जा रहा है...', ariaCopy: 'फोन नंबर कॉपी करें', ariaShare: 'संपर्क साझा करें', ariaMap: 'नक्शे पर देखें' }
+        };
+        
+        const categoryTranslations = {
+            'All': { en: 'All', mr: 'सर्व', hi: 'सभी' },
+            'Emergency': { en: 'Emergency', mr: 'आपत्कालीन', hi: 'आपातकालीन' },
+            'Local Police': { en: 'Local Police', mr: 'स्थानिक पोलीस', hi: 'स्थानीय पुलिस' },
+            'Medical': { en: 'Medical', mr: 'वैद्यकीय', hi: 'चिकित्सा' },
+            'Blood Banks': { en: 'Blood Banks', mr: 'रक्तपेढी', hi: 'ब्लड बैंक' },
+            'Helplines': { en: 'Helplines', mr: 'हेल्पलाइन', hi: 'हेल्पलाइन' },
+            'Civic Services': { en: 'Civic Services', mr: 'नागरी सेवा', hi: 'नागरिक सेवाएं' },
+            'Utilities': { en: 'Utilities', mr: 'उपयुक्तता', hi: 'उपयोगिताएँ' },
+            'Transport': { en: 'Transport', mr: 'वाहतूक', hi: 'परिवहन' },
+            'Animal Care': { en: 'Animal Care', mr: 'प्राणी काळजी', hi: 'पशु देखभाल' },
+            'Education': { en: 'Education', mr: 'शिक्षण', hi: 'शिक्षा' }
+        };
+
         const helplineData = [
-            { category: 'Emergency', service: 'Police', name: 'पोलीस', phone: '100', address: 'Citywide Emergency Service' },
-            { category: 'Emergency', service: 'Ambulance', name: 'रुग्णवाहिका', phone: '108', address: 'Statewide Medical Emergency' },
-            { category: 'Emergency', service: 'Fire Brigade', name: 'अग्निशमन दल', phone: '101', address: 'Citywide Fire Emergency' },
-            { category: 'Emergency', service: 'Disaster Management', name: 'आपत्ती व्यवस्थापन', phone: '1077', address: 'District Control Room, Pune' },
-            { category: 'Emergency', service: 'Traffic Police (Pune)', name: 'वाहतूक पोलीस (पुणे)', phone: '02026122000', address: 'Near Yerwada Post Office, Pune' },
-
-            { category: 'Medical', service: 'Sassoon General Hospital', name: 'ससून सर्वोपचार रुग्णालय', phone: '02026128000', address: 'Station Road, Pune' },
-            { category: 'Medical', service: 'KEM Hospital', name: 'केईएम रुग्णालय', phone: '02066037373', address: 'Rasta Peth, Pune' },
-            { category: 'Medical', service: 'Jehangir Hospital', name: 'जहांगीर रुग्णालय', phone: '02066819999', address: 'Sassoon Road, Pune' },
-            { category: 'Medical', service: 'Ruby Hall Clinic', name: 'रूबी हॉल क्लिनिक', phone: '02066455100', address: 'Sassoon Road, Pune' },
-            { category: 'Medical', service: 'Deenanath Mangeshkar Hospital', name: 'दीनानाथ मंगेशकर रुग्णालय', phone: '02040151000', address: 'Erandwane, Pune' },
-            { category: 'Medical', service: 'Aditya Birla Memorial Hospital', name: 'आदित्य बिर्ला मेमोरियल हॉस्पिटल', phone: '02030717500', address: 'Chinchwad, PCMC' },
-            { category: 'Medical', service: 'YCM Hospital, PCMC', name: 'यशवंतराव चव्हाण रुग्णालय', phone: '02067332222', address: 'Pimpri, PCMC' },
-
-            { category: 'Helplines', service: 'Women Helpline', name: 'महिला हेल्पलाइन', phone: '1091', address: 'National Helpline for Women' },
-            { category: 'Helplines', service: 'Child Helpline', name: 'चाइल्ड हेल्पलाइन', phone: '1098', address: 'National Helpline for Children' },
-            { category: 'Helplines', service: 'Senior Citizen Helpline', name: 'ज्येष्ठ नागरिक हेल्पलाइन', phone: '1090', address: 'Local Support for Seniors' },
-            
-            { category: 'Utilities', service: 'MSEDCL (Electricity)', name: 'महावितरण (वीज)', phone: '1912', address: 'Statewide Electricity Board' },
-            { category: 'Utilities', service: 'PMC Water Supply', name: 'पुणे मनपा पाणी पुरवठा', phone: '02025501000', address: 'PMC Head Office, Shivajinagar' },
-            { category: 'Utilities', service: 'PCMC Water Supply', name: 'पिंपरी-चिंचवड पाणी पुरवठा', phone: '02067333333', address: 'PCMC Main Building, Pimpri' },
-            { category: 'Utilities', service: 'MNGL Gas Leak', name: 'MNGL गॅस गळती', phone: '18002662696', address: 'Emergency Gas Leak Helpline' },
-
-            { category: 'Government', service: 'Pune Collector Office', name: 'पुणे जिल्हाधिकारी कार्यालय', phone: '02026122114', address: 'Camp, Pune' },
-            { category: 'Government', service: 'PMC Head Office', name: 'पुणे महानगरपालिका', phone: '02025501000', address: 'Shivajinagar, Pune' },
-            { category: 'Government', service: 'PCMC Head Office', name: 'पिंपरी-चिंचवड महानगरपालिका', phone: '02027425511', address: 'Pimpri, PCMC' },
-            
-            { category: 'Transport', service: 'Pune Railway Station', name: 'पुणे रेल्वे स्टेशन', phone: '139', address: 'Station Road, Pune' },
-            { category: 'Transport', service: 'Pune Airport', name: 'पुणे विमानतळ', phone: '02026683232', address: 'Lohegaon, Pune' },
-            { category: 'Transport', service: 'Swargate Bus Stand (MSRTC)', name: 'स्वारगेट बस स्टँड', phone: '02024442244', address: 'Swargate, Pune' },
-
-            { category: 'Animal Care', service: 'Govt. Veterinary Polyclinic', name: 'शासकीय पशुवैद्यकीय', phone: '02025654212', address: 'Aundh, Pune' },
-            { category: 'Animal Care', service: 'ResQ Charitable Trust', name: 'रेस्क्यू चॅरिटेबल ट्रस्ट', phone: '09890999111', address: 'Bavdhan, Pune' },
+             // Using the full, comprehensive list from the previous turn...
+            { category: 'Emergency', phone: '100', lat: 0, lon: 0, translations: { en: { service: 'Police', address: 'Citywide Emergency Service' }, mr: { service: 'पोलीस', address: 'शहरव्यापी आपत्कालीन सेवा' }, hi: { service: 'पुलिस', address: 'शहरव्यापी आपातकालीन सेवा' }}},
+            { category: 'Emergency', phone: '108', lat: 0, lon: 0, translations: { en: { service: 'Ambulance', address: 'Statewide Medical Emergency' }, mr: { service: 'रुग्णवाहिका', address: 'राज्यव्यापी वैद्यकीय आणीबाणी' }, hi: { service: 'एम्बुलेंस', address: 'राज्यव्यापी चिकित्सा आपातकाल' }}},
+            { category: 'Emergency', phone: '101', lat: 0, lon: 0, translations: { en: { service: 'Fire Brigade', address: 'Citywide Fire Emergency' }, mr: { service: 'अग्निशमन दल', address: 'शहरव्यापी आग आपत्कालीन' }, hi: { service: 'फायर ब्रिगेड', address: 'शहरव्यापी अग्नि आपातकाल' }}},
+            { category: 'Emergency', phone: '1077', lat: 18.5196, lon: 73.8553, translations: { en: { service: 'Disaster Management', address: 'District Control Room' }, mr: { service: 'आपत्ती व्यवस्थापन', address: 'जिल्हा नियंत्रण कक्ष' }, hi: { service: 'आपदा प्रबंधन', address: 'जिला नियंत्रण कक्ष' }}},
+            { category: 'Emergency', phone: '1916', lat: 0, lon: 0, translations: { en: { service: 'Gas Leak Emergency (All)', address: 'LPG Leak Helpline' }, mr: { service: 'गॅस गळती आपत्कालीन (सर्व)', address: 'एलपीजी गळती हेल्पलाइन' }, hi: { service: 'गैस रिसाव आपातकाल (सभी)', address: 'एलपीजी रिसाव हेल्पलाइन' }}},
+            { category: 'Local Police', phone: '02026126296', lat: 18.5204, lon: 73.8718, translations: { en: { service: 'Pune City Police Control', address: 'Camp, Pune' }, mr: { service: 'पुणे शहर पोलीस नियंत्रण', address: 'कॅम्प, पुणे' }, hi: { service: 'पुणे शहर पुलिस नियंत्रण', address: 'कैंप, पुणे' }}},
+            { category: 'Local Police', phone: '02027652727', lat: 18.6277, lon: 73.8010, translations: { en: { service: 'Pimpri-Chinchwad Police', address: 'PCMC Main Building, Pimpri' }, mr: { service: 'पिंपरी-चिंचवड पोलीस', address: 'पीसीएमसी मुख्य इमारत, पिंपरी' }, hi: { service: 'पिंपरी-चिंचवड पुलिस', address: 'पीसीएमसी मुख्य भवन, पिंपरी' }}},
+            { category: 'Local Police', phone: '02025657171', lat: 18.5179, lon: 73.8329, translations: { en: { service: 'Deccan Police Station', address: 'Deccan Gymkhana' }, mr: { service: 'डेक्कन पोलीस स्टेशन', address: 'डेक्कन जिमखाना' }, hi: { service: 'डेक्कन पुलिस स्टेशन', address: 'डेक्कन जिमखाना' }}},
+            { category: 'Local Police', phone: '02025380101', lat: 18.5074, lon: 73.8095, translations: { en: { service: 'Kothrud Police Station', address: 'Near MIT College, Kothrud' }, mr: { service: 'कोथरूड पोलीस स्टेशन', address: 'एमआयटी कॉलेज जवळ, कोथरूड' }, hi: { service: 'कोथरुड पुलिस स्टेशन', address: 'एमआईटी कॉलेज के पास, कोथरुड' }}},
+            { category: 'Medical', phone: '02026128000', lat: 18.5280, lon: 73.8710, translations: { en: { service: 'Sassoon General Hospital', address: 'Station Road, Pune' }, mr: { service: 'ससून सर्वोपचार रुग्णालय', address: 'स्टेशन रोड, पुणे' }, hi: { service: 'ससून जनरल अस्पताल', address: 'स्टेशन रोड, पुणे' }}},
+            { category: 'Medical', phone: '02067332222', lat: 18.6279, lon: 73.8143, translations: { en: { service: 'YCM Hospital, PCMC', address: 'Pimpri, PCMC' }, mr: { service: 'यशवंतराव चव्हाण रुग्णालय', address: 'पिंपरी, पिंपरी-चिंचवड' }, hi: { service: 'वाईसीएम अस्पताल, पीसीएमसी', address: 'पिंपरी, पीसीएमसी' }}},
+            { category: 'Medical', phone: '02040151000', lat: 18.5015, lon: 73.8213, translations: { en: { service: 'Deenanath Mangeshkar Hospital', address: 'Erandwane, Pune' }, mr: { service: 'दीनानाथ मंगेशकर रुग्णालय', address: 'एरंडवणे, पुणे' }, hi: { service: 'दीनानाथ मंगेशकर अस्पताल', address: 'एरंडवाने, पुणे' }}},
+            { category: 'Medical', phone: '02025881230', lat: 18.5630, lon: 73.8068, translations: { en: { service: 'Aundh District Hospital', address: 'Aundh Camp, Pune' }, mr: { service: 'औंध जिल्हा रुग्णालय', address: 'औंध कॅम्प, पुणे' }, hi: { service: 'औंध जिला अस्पताल', address: 'औंध कैंप, पुणे' }}},
+            { category: 'Blood Banks', phone: '02024449591', lat: 18.5135, lon: 73.8475, translations: { en: { service: 'Janakalyan Raktapedhi', address: 'Narayan Peth, Pune' }, mr: { service: 'जनकल्याण रक्तपेढी', address: 'नारायण पेठ, पुणे' }, hi: { service: 'जनकल्याण रक्तपेढी', address: 'नारायण पेठ, पुणे' }}},
+            { category: 'Blood Banks', phone: '02066455100', lat: 18.5269, lon: 73.8722, translations: { en: { service: 'Ruby Hall Clinic Blood Bank', address: 'Sassoon Road, Pune' }, mr: { service: 'रुबी हॉल क्लिनिक रक्तपेढी', address: 'ससून रोड, पुणे' }, hi: { service: 'रूबी हॉल क्लिनिक ब्लड बैंक', address: 'ससून रोड, पुणे' }}},
+            { category: 'Helplines', phone: '1091', lat: 0, lon: 0, translations: { en: { service: 'Women Helpline', address: 'National Helpline for Women' }, mr: { service: 'महिला हेल्पलाइन', address: 'महिलांसाठी राष्ट्रीय हेल्पलाइन' }, hi: { service: 'महिला हेल्पलाइन', address: 'महिलाओं के लिए राष्ट्रीय हेल्पलाइन' }}},
+            { category: 'Helplines', phone: '1098', lat: 0, lon: 0, translations: { en: { service: 'Child Helpline', address: 'National Helpline for Children' }, mr: { service: 'चाइल्ड हेल्पलाइन', address: 'मुलांसाठी राष्ट्रीय हेल्पलाइन' }, hi: { service: 'चाइल्ड हेल्पलाइन', address: 'बच्चों के लिए राष्ट्रीय हेल्पलाइन' }}},
+            { category: 'Helplines', phone: '1800222262', lat: 0, lon: 0, translations: { en: { service: 'State Consumer Helpline', address: 'For consumer complaints' }, mr: { service: 'राज्य ग्राहक हेल्पलाइन', address: 'ग्राहक तक्रारींसाठी' }, hi: { service: 'राज्य उपभोक्ता हेल्पलाइन', address: 'उपभोक्ता शिकायतों के लिए' }}},
+            { category: 'Civic Services', phone: '02025501000', lat: 18.5310, lon: 73.8447, translations: { en: { service: 'PMC Head Office', address: 'Shivajinagar, Pune' }, mr: { service: 'पुणे महानगरपालिका', address: 'शिवाजीनगर, पुणे' }, hi: { service: 'पीएमसी मुख्यालय', address: 'शिवाजीनगर, पुणे' }}},
+            { category: 'Civic Services', phone: '8888006666', lat: 18.6277, lon: 73.8010, translations: { en: { service: 'PCMC Sarathi Helpline', address: 'PCMC Integrated Helpline' }, mr: { service: 'पिंपरी-चिंचवड सारथी हेल्पलाइन', address: 'पिंपरी-चिंचवड एकात्मिक हेल्पलाइन' }, hi: { service: 'पीसीएमसी सारथी हेल्पलाइन', address: 'पीसीएमसी एकीकृत हेल्पलाइन' }}},
+            { category: 'Civic Services', phone: '18001030222', lat: 18.5310, lon: 73.8447, translations: { en: { service: 'PMC Complaint Number', address: 'For civic issues' }, mr: { service: 'पुणे मनपा तक्रार क्रमांक', address: 'नागरी समस्यांसाठी' }, hi: { service: 'पीएमसी शिकायत संख्या', address: 'नागरिक मुद्दों के लिए' }}},
+            { category: 'Civic Services', phone: '02025601258', lat: 18.5612, lon: 73.7844, translations: { en: { service: 'Passport Seva Kendra', address: 'Mundhwa, Pune' }, mr: { service: 'पासपोर्ट सेवा केंद्र', address: 'मुंढवा, पुणे' }, hi: { service: 'पासपोर्ट सेवा केंद्र', address: 'मुंढवा, पुणे' }}},
+            { category: 'Utilities', phone: '1912', lat: 0, lon: 0, translations: { en: { service: 'MSEDCL (Electricity)', address: 'Statewide Electricity Board' }, mr: { service: 'महावितरण (वीज)', address: 'राज्यव्यापी वीज मंडळ' }, hi: { service: 'एमएसईडीसीएल (बिजली)', address: 'राज्यव्यापी बिजली बोर्ड' }}},
+            { category: 'Utilities', phone: '02025501383', lat: 18.5310, lon: 73.8447, translations: { en: { service: 'PMC Water Supply', address: 'Shivajinagar, Pune' }, mr: { service: 'पुणे मनपा पाणी पुरवठा', address: 'शिवाजीनगर, पुणे' }, hi: { service: 'पीएमसी जलापूर्ति', address: 'शिवाजीनगर, पुणे' }}},
+            { category: 'Transport', phone: '139', lat: 18.5276, lon: 73.8732, translations: { en: { service: 'Pune Railway Station', address: 'Station Road, Pune' }, mr: { service: 'पुणे रेल्वे स्टेशन', address: 'स्टेशन रोड, पुणे' }, hi: { service: 'पुणे रेलवे स्टेशन', address: 'स्टेशन रोड, पुणे' }}},
+            { category: 'Transport', phone: '02026683232', lat: 18.5786, lon: 73.9088, translations: { en: { service: 'Pune Airport', address: 'Lohegaon, Pune' }, mr: { service: 'पुणे विमानतळ', address: 'लोहगाव, पुणे' }, hi: { service: 'पुणे हवाई अड्डा', address: 'लोहेगांव, पुणे' }}},
+            { category: 'Transport', phone: '18002705501', lat: 0, lon: 0, translations: { en: { service: 'Pune Metro (Maha Metro)', address: 'Customer Care Helpline' }, mr: { service: 'पुणे मेट्रो (महा मेट्रो)', address: 'ग्राहक सेवा हेल्पलाइन' }, hi: { service: 'पुणे मेट्रो (महा मेट्रो)', address: 'ग्राहक सेवा हेल्पलाइन' }}},
+            { category: 'Transport', phone: '02024442244', lat: 18.4990, lon: 73.8617, translations: { en: { service: 'Swargate MSRTC Bus Stand', address: 'Swargate, Pune' }, mr: { service: 'स्वारगेट MSRTC बस स्टँड', address: 'स्वारगेट, पुणे' }, hi: { service: 'स्वारगेट MSRTC बस स्टैंड', address: 'स्वारगेट, पुणे' }}},
+            { category: 'Transport', phone: '02025536970', lat: 18.5385, lon: 73.8407, translations: { en: { service: 'Shivajinagar MSRTC Bus Stand', address: 'Wakdewadi, Shivajinagar' }, mr: { service: 'शिवाजीनगर MSRTC बस स्टँड', address: 'वाकडेवाडी, शिवाजीनगर' }, hi: { service: 'शिवाजीनगर MSRTC बस स्टैंड', address: 'वाकडेवाडी, शिवाजीनगर' }}},
+            { category: 'Animal Care', phone: '9890999111', lat: 18.5085, lon: 73.7699, translations: { en: { service: 'ResQ Charitable Trust', address: 'Bavdhan, Pune' }, mr: { service: 'रेस्क्यू चॅरिटेबल ट्रस्ट', address: 'बावधन, पुणे' }, hi: { service: 'रेस्क्यू चैरिटेबल ट्रस्ट', address: 'बावधान, पुणे' }}},
+            { category: 'Animal Care', phone: '9552552355', lat: 18.4839, lon: 73.7997, translations: { en: { service: 'Karma Foundation', address: 'Warje, Pune' }, mr: { service: 'कर्मा फाउंडेशन', address: 'वारजे, पुणे' }, hi: { service: 'कर्मा फाउंडेशन', address: 'वारजे, पुणे' }}},
+            { category: 'Animal Care', phone: '02024376186', lat: 18.4496, lon: 73.8415, translations: { en: { service: 'Katraj Snake Park & Rescue', address: 'Katraj, Pune' }, mr: { service: 'कात्रज सर्प उद्यान आणि बचाव', address: 'कात्रज, पुणे' }, hi: { service: 'कात्रज सर्प उद्यान और बचाव', address: 'कात्रज, पुणे' }}},
+            { category: 'Education', phone: '02025696061', lat: 18.5535, lon: 73.8245, translations: { en: { service: 'Savitribai Phule Pune University', address: 'Ganeshkhind, Pune' }, mr: { service: 'सावित्रीबाई फुले पुणे विद्यापीठ', address: 'गणेशखिंड, पुणे' }, hi: { service: 'सावित्रीबाई फुले पुणे विश्वविद्यालय', address: 'गणेशखिंड, पुणे' }}},
+            { category: 'Education', phone: '02025705000', lat: 18.5310, lon: 73.8447, translations: { en: { service: 'SSC/HSC Board Office, Pune', address: 'Shivajinagar, Pune' }, mr: { service: 'SSC/HSC बोर्ड कार्यालय, पुणे', address: 'शिवाजीनगर, पुणे' }, hi: { service: 'SSC/HSC बोर्ड कार्यालय, पुणे', address: 'शिवाजीनगर, पुणे' }}},
         ];
 
-        // --- DOM Elements ---
         const landingPage = document.getElementById('landingPage');
         const mainApp = document.getElementById('mainApp');
         const enterButton = document.getElementById('enterButton');
+        const backToHomeBtn = document.getElementById('backToHomeBtn');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const languageSwitcher = document.getElementById('languageSwitcher');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
         const helplineList = document.getElementById('helplineList');
         const searchInput = document.getElementById('searchInput');
         const notFoundMessage = document.getElementById('notFoundMessage');
         const categoryTabsContainer = document.getElementById('categoryTabs');
+        const starsContainer = document.getElementById('stars-container');
+        const locationLoader = document.getElementById('locationLoader');
 
-        // --- Functions ---
+        let currentLang = 'en';
+        let sortedHelplineData = [...helplineData];
 
-        /**
-         * Groups contacts by their category.
-         * @returns {Object} An object with categories as keys and arrays of contacts as values.
-         */
-        function getContactsByCategory() {
-            return helplineData.reduce((acc, contact) => {
-                (acc[contact.category] = acc[contact.category] || []).push(contact);
-                return acc;
-            }, {});
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; const dLat = (lat2 - lat1) * Math.PI / 180; const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); return R * c;
         }
 
-        /**
-         * Renders the list of helpline contacts, grouped by category.
-         * @param {Array} contacts - The array of contact objects to display.
-         */
+        function requestLocationAndRender() {
+            locationLoader.classList.remove('hidden');
+            helplineList.innerHTML = '';
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        sortedHelplineData = [...helplineData].map(service => {
+                            if (service.lat !== 0 && service.lon !== 0) { service.distance = haversineDistance(latitude, longitude, service.lat, service.lon); } else { service.distance = Infinity; }
+                            return service;
+                        }).sort((a, b) => a.distance - b.distance);
+                        locationLoader.classList.add('hidden');
+                        renderList(sortedHelplineData);
+                    },
+                    (error) => {
+                        console.warn(`Geolocation error: ${error.message}`);
+                        locationLoader.classList.add('hidden');
+                        renderList(sortedHelplineData); 
+                    }
+                );
+            } else {
+                console.warn('Geolocation is not supported by this browser.');
+                locationLoader.classList.add('hidden');
+                renderList(sortedHelplineData);
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang; localStorage.setItem('language', lang); updateUIText(); renderCategoryTabs();
+            const currentCategory = document.querySelector('.category-tab.gradient-border-active')?.dataset.category || 'All';
+            const filtered = (currentCategory === 'All') ? sortedHelplineData : sortedHelplineData.filter(c => c.category === currentCategory);
+            renderList(filtered);
+            document.querySelectorAll('.lang-btn').forEach(btn => { btn.classList.toggle('gradient-border-active', btn.dataset.lang === lang); });
+        }
+
+        function updateUIText() {
+            const translations = uiStrings[currentLang];
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[key]) {
+                    if (el.tagName === 'INPUT') { el.placeholder = translations[key]; } 
+                    else { el.textContent = translations[key]; }
+                }
+            });
+            document.documentElement.lang = currentLang;
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            sunIcon.classList.toggle('hidden', theme === 'dark'); moonIcon.classList.toggle('hidden', theme === 'light');
+            localStorage.setItem('theme', theme);
+        }
+
+        function handleRouteChange() {
+            const isMainPage = window.location.hash === '#main';
+            landingPage.classList.toggle('hidden', isMainPage); mainApp.classList.toggle('hidden', !isMainPage);
+            if (isMainPage) { mainApp.classList.add('fade-in'); requestLocationAndRender(); setupScrollAnimations(); } 
+            else { mainApp.classList.remove('fade-in'); }
+        }
+        
         function renderList(contacts) {
             helplineList.innerHTML = '';
-            
-            const filteredContactsByCategory = contacts.reduce((acc, contact) => {
-                (acc[contact.category] = acc[contact.category] || []).push(contact);
-                return acc;
-            }, {});
+            const filteredData = contacts.reduce((acc, contact) => { (acc[contact.category] = acc[contact.category] || []).push(contact); return acc; }, {});
+            notFoundMessage.classList.toggle('hidden', contacts.length > 0);
+            if (contacts.length === 0) { feather.replace(); }
 
-            const hasContacts = Object.keys(filteredContactsByCategory).length > 0;
-            notFoundMessage.classList.toggle('hidden', hasContacts);
-            
-            if (!hasContacts) return;
-
-            for (const category in filteredContactsByCategory) {
-                const categoryWrapper = document.createElement('div');
-                categoryWrapper.id = `category-${category.replace(/\s+/g, '-')}`;
+            for (const categoryKey in filteredData) {
+                const categoryWrapper = document.createElement('div'); categoryWrapper.className = 'reveal-on-scroll';
+                const categoryName = categoryTranslations[categoryKey] ? categoryTranslations[categoryKey][currentLang] : categoryKey;
+                categoryWrapper.innerHTML = `<h2 class="text-2xl font-bold text-[var(--accent-color)] mb-4">${categoryName}</h2>`;
+                const grid = document.createElement('div'); grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
                 
-                const categoryTitle = document.createElement('h2');
-                categoryTitle.className = 'text-2xl font-bold text-blue-300 mb-4';
-                categoryTitle.textContent = category;
-                categoryWrapper.appendChild(categoryTitle);
-
-                const grid = document.createElement('div');
-                grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
-
-                filteredContactsByCategory[category].forEach(contact => {
+                filteredData[categoryKey].forEach(contact => {
                     const item = document.createElement('div');
-                    item.className = 'bg-gray-800/50 p-5 rounded-xl shadow-lg border border-gray-700 flex flex-col justify-between transition-all duration-300 hover:border-blue-500 hover:shadow-blue-500/10 hover:scale-[1.02]';
+                    item.className = 'glass-card p-5 rounded-xl flex flex-col justify-between reveal-on-scroll';
+                    const contactInfo = contact.translations[currentLang];
+                    let distanceInfo = (contact.distance && contact.distance !== Infinity) ? `<p class="text-xs text-[var(--accent-color)] font-semibold">(${uiStrings[currentLang].approx} ${contact.distance.toFixed(1)} ${uiStrings[currentLang].distanceAway})</p>` : '';
+                    const shareButton = navigator.share ? `<button class="action-icon share-btn" aria-label="${uiStrings[currentLang].ariaShare}" data-service-name="${contactInfo.service}" data-phone="${contact.phone}" data-address="${contactInfo.address}"><i data-feather="share-2" class="w-5 h-5 pointer-events-none"></i></button>` : '';
+                    const mapButton = (contact.lat !== 0) ? `<a href="https://www.google.com/maps?q=${contact.lat},${contact.lon}" target="_blank" class="action-icon" aria-label="${uiStrings[currentLang].ariaMap}"><i data-feather="map" class="w-5 h-5"></i></a>` : '';
 
-                    // Contact info section
-                    const infoDiv = document.createElement('div');
-                    
-                    const serviceP = document.createElement('p');
-                    serviceP.className = 'text-xl font-semibold text-white';
-                    serviceP.textContent = contact.service;
-                    
-                    const nameP = document.createElement('p');
-                    nameP.className = 'text-md text-gray-400 mb-3';
-                    nameP.textContent = contact.name;
-                    
-                    const addressDiv = document.createElement('div');
-                    addressDiv.className = 'flex items-start text-gray-300 text-sm mt-2';
-                    const addressIcon = document.createElement('i');
-                    addressIcon.setAttribute('data-feather', 'map-pin');
-                    addressIcon.className = 'w-4 h-4 mr-2 mt-1 flex-shrink-0 text-gray-400';
-                    const addressP = document.createElement('p');
-                    addressP.textContent = contact.address;
-                    addressDiv.appendChild(addressIcon);
-                    addressDiv.appendChild(addressP);
-
-                    infoDiv.appendChild(serviceP);
-                    infoDiv.appendChild(nameP);
-                    infoDiv.appendChild(addressDiv);
-
-                    // Call button section
-                    const callButton = document.createElement('a');
-                    callButton.href = `tel:${contact.phone}`;
-                    callButton.className = 'mt-4 w-full bg-green-600 text-white font-bold py-3 px-5 rounded-lg flex items-center justify-center space-x-2 transition-colors hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-400 active:scale-95';
-                    
-                    const callIcon = document.createElement('i');
-                    callIcon.setAttribute('data-feather', 'phone-call');
-                    callIcon.setAttribute('stroke-width', '2.5');
-                    callIcon.setAttribute('width', '20');
-                    callIcon.setAttribute('height', '20');
-                    
-                    const callText = document.createElement('span');
-                    callText.textContent = `Call ${contact.phone}`;
-
-                    callButton.appendChild(callIcon);
-                    callButton.appendChild(callText);
-                    
-                    item.appendChild(infoDiv);
-                    item.appendChild(callButton);
+                    item.innerHTML = `
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <div class="pr-4">
+                                    <p class="text-xl font-semibold text-[var(--text-primary)]">${contactInfo.service}</p>
+                                    ${distanceInfo}
+                                </div>
+                                <div class="flex items-center flex-shrink-0 text-[var(--text-secondary)]">
+                                    ${shareButton}
+                                    <button class="action-icon copy-btn" aria-label="${uiStrings[currentLang].ariaCopy}" data-phone="${contact.phone}"><i data-feather="copy" class="w-5 h-5 pointer-events-none"></i></button>
+                                    ${mapButton}
+                                </div>
+                            </div>
+                            <div class="flex items-start text-[var(--text-secondary)] text-sm mt-2">
+                                <i data-feather="map-pin" aria-hidden="true" class="w-4 h-4 mr-2 mt-1 flex-shrink-0"></i>
+                                <p>${contactInfo.address}</p>
+                            </div>
+                        </div>
+                        <a href="tel:${contact.phone}" class="mt-4 w-full bg-teal-600 text-white font-bold py-3 px-5 rounded-lg flex items-center justify-center space-x-2 transition-colors hover:bg-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-400 active:scale-95">
+                            <i data-feather="phone-call" aria-hidden="true" stroke-width="2.5" width="20" height="20"></i>
+                            <span>${uiStrings[currentLang].call} ${contact.phone}</span>
+                        </a>`;
                     grid.appendChild(item);
                 });
-                
                 categoryWrapper.appendChild(grid);
                 helplineList.appendChild(categoryWrapper);
             }
-            
             feather.replace();
+            setupScrollAnimations();
         }
 
-        /**
-         * Renders the category tabs.
-         */
         function renderCategoryTabs() {
-            const categories = Object.keys(getContactsByCategory());
-            categories.unshift('All'); // Add 'All' tab at the beginning
-            
-            categories.forEach(category => {
-                const tab = document.createElement('button');
-                tab.className = 'category-tab flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-300 rounded-lg transition-colors duration-200';
-                tab.textContent = category;
-                tab.dataset.category = category;
-                if (category === 'All') {
-                    tab.classList.add('active');
-                }
-                tab.addEventListener('click', () => handleCategoryClick(category));
-                categoryTabsContainer.appendChild(tab);
-            });
-        }
-        
-        /**
-         * Handles clicking on a category tab.
-         * @param {string} category - The selected category.
-         */
-        function handleCategoryClick(category) {
-            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.category-tab[data-category="${category}"]`).classList.add('active');
-
-            searchInput.value = ''; // Clear search on tab change
-
-            if (category === 'All') {
-                renderList(helplineData);
-            } else {
-                const filtered = helplineData.filter(c => c.category === category);
-                renderList(filtered);
-            }
+            const categories = ['All', ...new Set(helplineData.map(c => c.category))];
+            categoryTabsContainer.innerHTML = categories.map(categoryKey => {
+                if(!categoryKey || !categoryTranslations[categoryKey]) return '';
+                const categoryName = categoryTranslations[categoryKey][currentLang];
+                return `<button class="category-tab flex-shrink-0 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] rounded-lg transition-all duration-200 border-2 border-transparent hover:border-[var(--accent-color)]" data-category="${categoryKey}">${categoryName}</button>`;
+            }).join('');
+            categoryTabsContainer.querySelector('.category-tab').classList.add('gradient-border-active');
         }
 
-        /**
-         * Filters the helpline data based on the search input.
-         */
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); }});
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+        }
+
         function filterContacts() {
             const query = searchInput.value.toLowerCase().trim();
-            // Reset active tab to 'All' when searching
-            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector('.category-tab[data-category="All"]').classList.add('active');
-
-            const filteredData = helplineData.filter(contact =>
-                contact.service.toLowerCase().includes(query) ||
-                contact.name.toLowerCase().includes(query) ||
-                contact.address.toLowerCase().includes(query) ||
-                contact.phone.includes(query)
-            );
-            renderList(filteredData);
+            const activeCategory = document.querySelector('.category-tab.gradient-border-active')?.dataset.category || 'All';
+            let dataToFilter = (activeCategory === 'All') ? sortedHelplineData : sortedHelplineData.filter(c => c.category === activeCategory);
+            if (query) {
+                dataToFilter = sortedHelplineData.filter(c => {
+                    const contactLang = c.translations[currentLang];
+                    return contactLang.service.toLowerCase().includes(query) || contactLang.address.toLowerCase().includes(query) || c.phone.includes(query);
+                });
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('gradient-border-active'));
+                document.querySelector('.category-tab[data-category="All"]').classList.add('gradient-border-active');
+            }
+            renderList(dataToFilter);
         }
 
-        // --- Event Listeners ---
+        // --- Event Listeners Setup ---
+        themeToggleBtn.addEventListener('click', () => { const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark'; setTheme(currentTheme === 'dark' ? 'light' : 'dark'); });
+        languageSwitcher.addEventListener('click', (e) => { if(e.target.classList.contains('lang-btn')) { setLanguage(e.target.dataset.lang); }});
+        enterButton.addEventListener('click', () => { history.pushState({page: 'main'}, 'Main Page', '#main'); handleRouteChange(); });
+        backToHomeBtn.addEventListener('click', () => { history.pushState({page: 'home'}, 'Home Page', '#'); handleRouteChange(); });
+        window.addEventListener('popstate', handleRouteChange);
+        searchInput.addEventListener('input', filterContacts);
         
-        // Listen for click on the enter button
-        enterButton.addEventListener('click', () => {
-            landingPage.classList.add('hidden');
-            mainApp.classList.remove('hidden');
-            mainApp.classList.add('flex', 'fade-in');
+        helplineList.addEventListener('click', (e) => {
+            const copyBtn = e.target.closest('.copy-btn');
+            const shareBtn = e.target.closest('.share-btn');
+
+            if (copyBtn) {
+                const phone = copyBtn.dataset.phone;
+                navigator.clipboard.writeText(phone).then(() => {
+                    const icon = copyBtn.querySelector('i');
+                    icon.setAttribute('data-feather', 'check');
+                    feather.replace({ width: '20px', height: '20px' });
+                    setTimeout(() => {
+                        icon.setAttribute('data-feather', 'copy');
+                        feather.replace({ width: '20px', height: '20px' });
+                    }, 1500);
+                });
+            }
+
+            if (shareBtn) {
+                const service = shareBtn.dataset.serviceName;
+                const phone = shareBtn.dataset.phone;
+                const address = shareBtn.dataset.address;
+                navigator.share({
+                    title: `Pune Seva Sahyog: ${service}`,
+                    text: `${service}\nPhone: ${phone}\nAddress: ${address}`,
+                });
+            }
         });
 
-        // Listen for input in the search bar
-        searchInput.addEventListener('keyup', filterContacts);
-        searchInput.addEventListener('search', filterContacts);
+        categoryTabsContainer.addEventListener('click', (e) => {
+             if (!e.target.classList.contains('category-tab')) return;
+             document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('gradient-border-active'));
+             e.target.classList.add('gradient-border-active');
+             const category = e.target.dataset.category;
+             searchInput.value = '';
+             const filtered = (category === 'All') ? sortedHelplineData : sortedHelplineData.filter(c => c.category === category);
+             renderList(filtered);
+        });
 
-        // --- Initial Load ---
-        
         document.addEventListener('DOMContentLoaded', () => {
-            feather.replace(); // Initial icon render for landing page
-            renderCategoryTabs();
-            renderList(helplineData);
+            setTheme(localStorage.getItem('theme') || 'dark');
+            const savedLang = localStorage.getItem('language') || 'en';
+            setLanguage(savedLang);
+            let starsHTML = ''; for (let i = 0; i < 100; i++) { starsHTML += `<div class="stars" style="top:${Math.random()*2000}px;left:${Math.random()*100}%;animation-delay:${Math.random()*20}s;animation-duration:${100+Math.random()*10}s;"></div>`; } starsContainer.innerHTML = starsHTML;
+            feather.replace();
+            handleRouteChange();
         });
     </script>
 </body>
