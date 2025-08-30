@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pune Seva Sahyog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+  <body>
+    <div class="bg-container"><div id="stars-container"></div></div>
+
+    <div
+      id="landingPage"
+      class="flex flex-col items-center justify-center min-h-screen p-6 text-center overflow-hidden transition-opacity duration-500"
+    >
+      <div class="relative z-10 fade-in">
+        <div class="mb-6">
+          <i
+            data-feather="life-buoy"
+            aria-hidden="true"
+            class="w-20 h-20 text-teal-300 mx-auto transition-transform duration-300 hover:scale-110"
+          ></i>
+        </div>
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white">
+          <span class="gradient-text">Pune Seva Sahyog</span>
+        </h1>
+        <p
+          data-translate-key="landingDesc"
+          class="mt-4 text-lg text-gray-300 max-w-md mx-auto"
+        >
+          Your one-tap directory for all essential services in the Pune & PCMC
+          region.
+        </p>
+        <button
+          id="enterButton"
+          data-translate-key="enter"
+          class="mt-8 bg-indigo-600 text-white font-bold py-4 px-10 rounded-xl text-lg hover:bg-teal-500 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-teal-400"
+        >
+          Enter
+        </button>
+      </div>
+      <footer
+        class="absolute bottom-6 text-center w-full text-gray-500 text-sm fade-in"
+        style="animation-delay: 0.5s"
+      >
+        <p data-translate-key="credits">Credits: Parth Ahuja</p>
+      </footer>
+    </div>
+
+    <div
+      id="mainApp"
+      class="hidden container mx-auto max-w-2xl p-4 min-h-screen flex-col relative z-10 transition-opacity duration-500"
+    >
+      <header class="text-center mb-6 pt-4 flex justify-between items-center">
+        <button
+          id="backToHomeBtn"
+          aria-label="Back to Home Page"
+          class="p-2 rounded-full hover:bg-[var(--card-bg)] transition-colors"
+        >
+          <i
+            data-feather="arrow-left"
+            aria-hidden="true"
+            class="text-[var(--text-secondary)]"
+          ></i>
+        </button>
+        <div class="flex-grow">
+          <h1 id="main-title" class="text-4xl font-bold gradient-text">
+            Pune Seva Sahyog
+          </h1>
+          <p
+            data-translate-key="subTitle"
+            class="text-[var(--text-secondary)] mt-1"
+          >
+            Pune and Pimpri-Chinchwad
+          </p>
+        </div>
+        <div class="flex items-center space-x-1">
+          <div
+            id="languageSwitcher"
+            class="flex items-center space-x-1 glass-card rounded-full p-1 text-xs"
+          >
+            <button data-lang="en" class="lang-btn px-2 py-1 rounded-full">
+              EN
+            </button>
+            <button data-lang="mr" class="lang-btn px-2 py-1 rounded-full">
+              MR
+            </button>
+            <button data-lang="hi" class="lang-btn px-2 py-1 rounded-full">
+              HI
+            </button>
+          </div>
+          <button
+            id="themeToggleBtn"
+            aria-label="Toggle Theme"
+            class="p-2 rounded-full hover:bg-[var(--card-bg)] transition-colors"
+          >
+            <i
+              data-feather="sun"
+              id="sunIcon"
+              aria-hidden="true"
+              class="text-[var(--text-secondary)]"
+            ></i>
+            <i
+              data-feather="moon"
+              id="moonIcon"
+              aria-hidden="true"
+              class="hidden text-[var(--text-secondary)]"
+            ></i>
+          </button>
+        </div>
+      </header>
+
+      <section aria-labelledby="search-title">
+        <h2 id="search-title" class="sr-only">Search Services</h2>
+        <div class="sticky top-0 z-20 py-4">
+          <div class="relative glass-card rounded-xl shadow-lg">
+            <input
+              type="search"
+              id="searchInput"
+              aria-label="Search all services"
+              data-translate-key="searchPlaceholder"
+              placeholder="Search all services..."
+              class="w-full p-4 pl-12 text-lg bg-transparent text-[var(--text-primary)] rounded-xl focus:outline-none focus:ring-2 ring-[var(--accent-color)] transition duration-300"
+            />
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+            >
+              <i
+                data-feather="search"
+                aria-hidden="true"
+                class="text-[var(--text-secondary)]"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="locationLoader" class="hidden text-center py-8">
+        <div role="status">
+          <svg
+            aria-hidden="true"
+            class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 40.0117 89.0077 44.2043 87.6311 48.2868C86.0944 51.9842 83.8217 55.3554 81.0441 58.133C79.1213 60.1221 76.8114 61.7305 74.2498 62.9032C71.6881 64.0759 68.9744 64.8143 66.1991 65.0801C63.4238 65.3459 60.6568 65.1383 57.9893 64.4699C53.7554 63.4352 49.8233 61.2722 46.5054 58.2859C43.8622 55.9359 41.8123 53.0782 40.5284 49.9239C39.3621 47.0408 38.9976 43.9031 39.4928 40.8543C40.0323 37.5255 41.6212 34.4533 44.0225 32.052C46.1508 29.9237 48.9643 28.4211 51.9868 27.7923C53.9454 27.3941 55.9736 27.5706 57.9057 28.3033C59.8378 29.0359 61.6438 30.2946 63.1633 31.9542C64.6828 33.6139 65.8853 35.631 66.6715 37.8381C67.7551 40.7923 67.2142 44.0384 65.3379 46.6875C64.7936 47.3888 63.5415 47.787 62.6466 47.3113C61.7517 46.8356 61.3534 45.5835 61.8978 44.8822C63.2215 42.9879 63.5659 40.6975 62.7797 38.6184C62.1485 36.9324 61.0264 35.4414 59.5533 34.3416C58.0802 33.2418 56.3155 32.5834 54.4923 32.4638C52.6691 32.3442 50.8587 32.766 49.2613 33.682C47.6639 34.598 46.3314 35.9736 45.3999 37.6749C44.1799 39.9233 43.9396 42.5948 44.7219 45.0933C45.7116 48.3324 47.9351 51.1441 50.9576 53.0833C53.9791 55.0225 57.6543 55.9427 61.3545 55.6793C65.0547 55.4158 68.6141 53.9873 71.4991 51.6234C74.3841 49.2594 76.5134 46.079 77.5539 42.545C78.4325 39.5444 78.2163 36.4253 76.9248 33.6323C76.2201 31.9962 75.1457 30.4935 73.7844 29.2435C72.4231 27.9935 70.8113 27.0321 69.0533 26.4358C67.2952 25.8394 65.437 25.6247 63.5878 25.8118C61.7386 25.9989 59.9434 26.5822 58.2937 27.5255C57.0622 28.2439 55.9435 29.1352 54.9937 30.1691C53.3437 31.9211 52.1937 34.0525 51.6937 36.3775C51.1937 38.7025 51.3737 41.1275 52.2337 43.3775C52.8837 45.1275 53.9037 46.7275 55.2037 48.0275C56.5037 49.3275 58.0237 50.2775 59.6237 50.8275C60.9237 51.2775 62.2737 51.4775 63.6237 51.3775C64.9737 51.2775 66.2737 50.8775 67.4237 50.2275C68.4237 49.6775 69.3237 48.9275 70.1237 48.0275C70.9237 47.1275 71.5737 46.1275 72.0737 45.0275C72.5737 43.9275 72.9237 42.7775 73.1237 41.5775C73.3237 40.3775 73.3737 39.1275 73.2737 37.9275C73.1737 36.7275 72.9237 35.5775 72.5237 34.4775C72.0237 33.0775 71.1737 31.7775 70.0737 30.7275C69.2737 29.9275 68.3237 29.2775 67.2737 28.8275C66.2237 28.3775 65.1237 28.1275 63.9737 28.1275C62.8237 28.1275 61.7237 28.3775 60.6737 28.8275C59.6237 29.2775 58.6737 29.9775 57.8737 30.7775L56.7698 1.05124Z"
+              fill="white"
+            />
+          </svg>
+          <p
+            class="text-[var(--text-secondary)] mt-2"
+            data-translate-key="loaderText"
+          >
+            Finding your location to show nearest services...
+          </p>
+        </div>
+      </div>
+
+      <div
+        id="categoryTabs"
+        class="flex space-x-2 p-1 mb-6 overflow-x-auto"
+      ></div>
+      <main id="helplineList" class="flex-grow space-y-8 pb-4"></main>
+
+      <div
+        id="search-results-announcer"
+        class="sr-only"
+        aria-live="polite"
+      ></div>
+      <div id="notFoundMessage" class="hidden text-center py-10">
+        <i
+          data-feather="alert-circle"
+          class="w-16 h-16 text-[var(--text-secondary)] mx-auto"
+        ></i>
+        <p
+          data-translate-key="notFound"
+          class="text-lg text-[var(--text-secondary)] mt-4"
+        >
+          No services found for your search.
+        </p>
+      </div>
+    </div>
+
+    <script type="module" src="js/script.js"></script>
+  </body>
+</html>
