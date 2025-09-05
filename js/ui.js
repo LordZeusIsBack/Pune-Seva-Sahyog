@@ -18,7 +18,21 @@ export const elements = {
   categoryTabsContainer: document.getElementById("categoryTabs"),
   starsContainer: document.getElementById("stars-container"),
   locationLoader: document.getElementById("locationLoader"),
+  locationInfo: document.getElementById("locationInfo"),
+  mainTitle: document.getElementById("main-title"),
 };
+
+export function showLocationInfo(location, currentLang) {
+  const subTitle = document.querySelector('[data-translate-key="subTitle"]');
+  
+  if (location.error) {
+    subTitle.textContent = uiStrings[currentLang].locationError;
+    subTitle.className = "text-orange-400 mt-1 text-sm";
+  } else if (location.locationName) {
+    subTitle.textContent = `${uiStrings[currentLang].currentLocation}: ${location.locationName}`;
+    subTitle.className = "text-[var(--accent-color)] mt-1 text-sm font-medium";
+  }
+}
 
 export function renderList(contacts, currentLang) {
   elements.helplineList.innerHTML = "";
@@ -102,7 +116,7 @@ export function renderCategoryTabs(categories, currentLang) {
     .join("");
   elements.categoryTabsContainer
     .querySelector(".category-tab")
-    .classList.add("gradient-border-active");
+    ?.classList.add("gradient-border-active");
 }
 
 export function updateUIText(currentLang) {

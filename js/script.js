@@ -1,11 +1,12 @@
 // js/script.js
 
-import { helplineData, categoryTranslations } from './data.js';
-import { elements, renderList, renderCategoryTabs, updateUIText, setTheme } from './ui.js';
+import { helplineData, categoryTranslations, updateHelplineDataForLocation } from './data.js';
+import { elements, renderList, renderCategoryTabs, updateUIText, setTheme, showLocationInfo } from './ui.js';
 
 // --- STATE MANAGEMENT ---
 let currentLang = "en";
 let sortedHelplineData = [...helplineData];
+let currentLocation = null;
 
 // --- CORE LOGIC & UTILITIES ---
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -22,49 +23,94 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-function requestLocationAndRender() {
+async function requestLocationAndRender() {
   elements.locationLoader.classList.remove("hidden");
   elements.helplineList.innerHTML = "";
+  
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
-        sortedHelplineData = [...helplineData]
-          .map((service) => {
-            if (service.lat !== 0 && service.lon !== 0) {
-              service.distance = haversineDistance(latitude, longitude, service.lat, service.lon);
-            } else {
-              service.distance = Infinity;
-            }
-            return service;
-          })
-          .sort((a, b) => a.distance - b.distance);
+        
+        try {
+          // Update helpline data based on location
+          const locationInfo = await updateHelplineDataForLocation(latitude, longitude);
+          
+          if (locationInfo) {
+            currentLocation = {
+              lat: latitude,
+              lon: longitude,
+              ...locationInfo
+            };
+            showLocationInfo(currentLocation, currentLang);
+          }
+          
+          // Import updated helpline data
+          const { helplineData: updatedData } = await import('./data.js');
+          
+          // Calculate distances and sort
+          sortedHelplineData = [...updatedData]
+            .map((service) => {
+              if (service.lat !== 0 && service.lon !== 0) {
+                service.distance = haversineDistance(latitude, longitude, service.lat, service.lon);
+              } else {
+                service.distance = Infinity;
+              }
+              return service;
+            })
+            .sort((a, b) => a.distance - b.distance);
+            
+        } catch (error) {
+          console.error('Error updating location data:', error);
+          sortedHelplineData = [...helplineData];
+        }
+        
         elements.locationLoader.classList.add("hidden");
         renderList(sortedHelplineData, currentLang);
+        updateCategoryTabs();
       },
       (error) => {
         console.warn(`Geolocation error: ${error.message}`);
         elements.locationLoader.classList.add("hidden");
-        renderList(sortedHelplineData, currentLang); // Fallback to default list
+        
+        // Show global emergency numbers when location is not available
+        sortedHelplineData = [...helplineData];
+        renderList(sortedHelplineData, currentLang);
+        updateCategoryTabs();
+        
+        // Show location error message
+        showLocationInfo({ error: true }, currentLang);
       }
     );
   } else {
     console.warn("Geolocation is not supported by this browser.");
     elements.locationLoader.classList.add("hidden");
-    renderList(sortedHelplineData, currentLang); // Fallback to default list
+    sortedHelplineData = [...helplineData];
+    renderList(sortedHelplineData, currentLang);
+    updateCategoryTabs();
+    showLocationInfo({ error: true }, currentLang);
   }
+}
+
+function updateCategoryTabs() {
+  const categories = ["All", ...new Set(sortedHelplineData.map((c) => c.category))];
+  renderCategoryTabs(categories, currentLang);
 }
 
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem("language", lang);
   updateUIText(currentLang);
-  const categories = ["All", ...new Set(helplineData.map((c) => c.category))];
-  renderCategoryTabs(categories, currentLang);
+  updateCategoryTabs();
   
   const currentCategory = document.querySelector(".category-tab.gradient-border-active")?.dataset.category || "All";
   const filtered = currentCategory === "All" ? sortedHelplineData : sortedHelplineData.filter((c) => c.category === currentCategory);
   renderList(filtered, currentLang);
+
+  // Update location info if available
+  if (currentLocation) {
+    showLocationInfo(currentLocation, currentLang);
+  }
 
   document.querySelectorAll(".lang-btn").forEach((btn) => {
     btn.classList.toggle("gradient-border-active", btn.dataset.lang === lang);
@@ -158,7 +204,7 @@ function setupEventListeners() {
           const phone = shareBtn.dataset.phone;
           const address = shareBtn.dataset.address;
           navigator.share({
-            title: `Pune Seva Sahyog: ${service}`,
+            title: `Essential Services: ${service}`,
             text: `${service}\nPhone: ${phone}\nAddress: ${address}`,
           });
         }

@@ -3,10 +3,10 @@
 export const uiStrings = {
   en: {
     landingDesc:
-      "Your one-tap directory for all essential services in the Pune & PCMC region.",
+      "Your one-tap directory for essential services worldwide. Find emergency contacts, hospitals, police, and more in your area.",
     enter: "Enter",
     credits: "Credits: Parth Ahuja",
-    subTitle: "Pune and Pimpri-Chinchwad",
+    subTitle: "Essential Services Worldwide",
     searchPlaceholder: "Search all services...",
     notFound: "No services found for your search.",
     call: "Call",
@@ -16,13 +16,15 @@ export const uiStrings = {
     ariaCopy: "Copy phone number",
     ariaShare: "Share contact",
     ariaMap: "Show on map",
+    locationError: "Unable to detect location. Showing global emergency numbers.",
+    currentLocation: "Current Location",
   },
   mr: {
     landingDesc:
-      "पुणे आणि पिंपरी-चिंचवड परिसरातील सर्व आवश्यक सेवांसाठी तुमची वन-टॅप डिरेक्टरी.",
+      "जगभरातील आवश्यक सेवांसाठी तुमची वन-टॅप डिरेक्टरी. तुमच्या परिसरात आपत्कालीन संपर्क, रुग्णालये, पोलीस आणि बरेच काही शोधा.",
     enter: "प्रवेश",
     credits: "श्रेय: पार्थ आहुजा",
-    subTitle: "पुणे आणि पिंपरी-चिंचवड",
+    subTitle: "जगभरातील आवश्यक सेवा",
     searchPlaceholder: "सर्व सेवा शोधा...",
     notFound: "तुमच्या शोधासाठी कोणतीही सेवा आढळली नाही.",
     call: "कॉल करा",
@@ -32,13 +34,15 @@ export const uiStrings = {
     ariaCopy: "फोन नंबर कॉपी करा",
     ariaShare: "संपर्क शेअर करा",
     ariaMap: "नकाशावर दर्शवा",
+    locationError: "स्थान शोधू शकत नाही. जागतिक आपत्कालीन क्रमांक दर्शवित आहे.",
+    currentLocation: "सध्याचे स्थान",
   },
   hi: {
     landingDesc:
-      "पुणे और पीसीएमसी क्षेत्र में सभी आवश्यक सेवाओं के लिए आपकी वन-टॅप डायरेक्टरी।",
+      "दुनिया भर की आवश्यक सेवाओं के लिए आपकी वन-टॅप डायरेक्टरी। अपने क्षेत्र में आपातकालीन संपर्क, अस्पताल, पुलिस और बहुत कुछ खोजें।",
     enter: "प्रवेश करें",
     credits: "श्रेय: पार्थ आहूजा",
-    subTitle: "पुणे और पिंपरी-चिंचवड",
+    subTitle: "दुनिया भर की आवश्यक सेवाएं",
     searchPlaceholder: "सभी सेवाएं खोजें...",
     notFound: "आपकी खोज के लिए कोई सेवा नहीं मिली।",
     call: "कॉल करें",
@@ -49,45 +53,86 @@ export const uiStrings = {
     ariaCopy: "फोन नंबर कॉपी करें",
     ariaShare: "संपर्क साझा करें",
     ariaMap: "नक्शे पर देखें",
+    locationError: "स्थान का पता नहीं लगा सकते। वैश्विक आपातकालीन नंबर दिखा रहे हैं।",
+    currentLocation: "वर्तमान स्थान",
   },
 };
 
 export const categoryTranslations = {
   All: { en: "All", mr: "सर्व", hi: "सभी" },
   Emergency: { en: "Emergency", mr: "आपत्कालीन", hi: "आपातकालीन" },
-  "Local Police": {
-    en: "Local Police",
-    mr: "स्थानिक पोलीस",
-    hi: "स्थानीय पुलिस",
-  },
+  Police: { en: "Police", mr: "पोलीस", hi: "पुलिस" },
   Medical: { en: "Medical", mr: "वैद्यकीय", hi: "चिकित्सा" },
-  "Blood Banks": { en: "Blood Banks", mr: "रक्तपेढी", hi: "ब्लड बैंक" },
+  "Fire Department": { en: "Fire Department", mr: "अग्निशमन विभाग", hi: "अग्निशमन विभाग" },
+  Hospitals: { en: "Hospitals", mr: "रुग्णालये", hi: "अस्पताल" },
   Helplines: { en: "Helplines", mr: "हेल्पलाइन", hi: "हेल्पलाइन" },
-  "Civic Services": {
-    en: "Civic Services",
-    mr: "नागरी सेवा",
-    hi: "नागरिक सेवाएं",
-  },
+  "Civic Services": { en: "Civic Services", mr: "नागरी सेवा", hi: "नागरिक सेवाएं" },
   Utilities: { en: "Utilities", mr: "उपयुक्तता", hi: "उपयोगिताएँ" },
   Transport: { en: "Transport", mr: "वाहतूक", hi: "परिवहन" },
-  "Animal Care": {
-    en: "Animal Care",
-    mr: "प्राणी काळजी",
-    hi: "पशु देखभाल",
-  },
+  "Animal Care": { en: "Animal Care", mr: "प्राणी काळजी", hi: "पशु देखभाल" },
   Education: { en: "Education", mr: "शिक्षण", hi: "शिक्षा" },
 };
 
-export const helplineData = [
+// Global emergency numbers and essential services
+export const globalEmergencyNumbers = [
+  {
+    category: "Emergency",
+    phone: "112",
+    lat: 0,
+    lon: 0,
+    countries: ["EU", "Global"],
+    translations: {
+      en: { service: "European Emergency Number", address: "Works in all EU countries and many others worldwide" },
+      mr: { service: "युरोपीय आपत्कालीन क्रमांक", address: "सर्व EU देशांमध्ये आणि जगभरातील अनेक ठिकाणी कार्य करते" },
+      hi: { service: "यूरोपीय आपातकालीन नंबर", address: "सभी EU देशों और दुनिया भर के कई स्थानों पर काम करता है" },
+    },
+  },
+  {
+    category: "Emergency",
+    phone: "911",
+    lat: 0,
+    lon: 0,
+    countries: ["US", "CA"],
+    translations: {
+      en: { service: "Emergency Services", address: "United States & Canada" },
+      mr: { service: "आपत्कालीन सेवा", address: "युनायटेड स्टेट्स आणि कॅनडा" },
+      hi: { service: "आपातकालीन सेवाएं", address: "संयुक्त राज्य अमेरिका और कनाडा" },
+    },
+  },
+  {
+    category: "Emergency",
+    phone: "999",
+    lat: 0,
+    lon: 0,
+    countries: ["UK", "MY", "SG"],
+    translations: {
+      en: { service: "Emergency Services", address: "UK, Malaysia, Singapore & others" },
+      mr: { service: "आपत्कालीन सेवा", address: "यूके, मलेशिया, सिंगापूर आणि इतर" },
+      hi: { service: "आपातकालीन सेवाएं", address: "यूके, मलेशिया, सिंगापुर और अन्य" },
+    },
+  },
+  {
+    category: "Emergency",
+    phone: "000",
+    lat: 0,
+    lon: 0,
+    countries: ["AU"],
+    translations: {
+      en: { service: "Emergency Services", address: "Australia" },
+      mr: { service: "आपत्कालीन सेवा", address: "ऑस्ट्रेलिया" },
+      hi: { service: "आपातकालीन सेवाएं", address: "ऑस्ट्रेलिया" },
+    },
+  },
   {
     category: "Emergency",
     phone: "100",
     lat: 0,
     lon: 0,
+    countries: ["IN"],
     translations: {
-      en: { service: "Police", address: "Citywide Emergency Service" },
-      mr: { service: "पोलीस", address: "शहरव्यापी आपत्कालीन सेवा" },
-      hi: { service: "पुलिस", address: "शहरव्यापी आपातकालीन सेवा" },
+      en: { service: "Police", address: "India" },
+      mr: { service: "पोलीस", address: "भारत" },
+      hi: { service: "पुलिस", address: "भारत" },
     },
   },
   {
@@ -95,19 +140,11 @@ export const helplineData = [
     phone: "108",
     lat: 0,
     lon: 0,
+    countries: ["IN"],
     translations: {
-      en: {
-        service: "Ambulance",
-        address: "Statewide Medical Emergency",
-      },
-      mr: {
-        service: "रुग्णवाहिका",
-        address: "राज्यव्यापी वैद्यकीय आणीबाणी",
-      },
-      hi: {
-        service: "एम्बुलेंस",
-        address: "राज्यव्यापी चिकित्सा आपातकाल",
-      },
+      en: { service: "Ambulance", address: "India" },
+      mr: { service: "रुग्णवाहिका", address: "भारत" },
+      hi: { service: "एम्बुलेंस", address: "भारत" },
     },
   },
   {
@@ -115,537 +152,186 @@ export const helplineData = [
     phone: "101",
     lat: 0,
     lon: 0,
+    countries: ["IN"],
     translations: {
-      en: { service: "Fire Brigade", address: "Citywide Fire Emergency" },
-      mr: { service: "अग्निशमन दल", address: "शहरव्यापी आग आपत्कालीन" },
-      hi: { service: "फायर ब्रिगेड", address: "शहरव्यापी अग्नि आपातकाल" },
-    },
-  },
-  {
-    category: "Emergency",
-    phone: "1077",
-    lat: 18.5196,
-    lon: 73.8553,
-    translations: {
-      en: {
-        service: "Disaster Management",
-        address: "District Control Room",
-      },
-      mr: {
-        service: "आपत्ती व्यवस्थापन",
-        address: "जिल्हा नियंत्रण कक्ष",
-      },
-      hi: { service: "आपदा प्रबंधन", address: "जिला नियंत्रण कक्ष" },
-    },
-  },
-  {
-    category: "Emergency",
-    phone: "1916",
-    lat: 0,
-    lon: 0,
-    translations: {
-      en: {
-        service: "Gas Leak Emergency (All)",
-        address: "LPG Leak Helpline",
-      },
-      mr: {
-        service: "गॅस गळती आपत्कालीन (सर्व)",
-        address: "एलपीजी गळती हेल्पलाइन",
-      },
-      hi: {
-        service: "गैस रिसाव आपातकाल (सभी)",
-        address: "एलपीजी रिसाव हेल्पलाइन",
-      },
-    },
-  },
-  {
-    category: "Local Police",
-    phone: "02026126296",
-    lat: 18.5204,
-    lon: 73.8718,
-    translations: {
-      en: { service: "Pune City Police Control", address: "Camp, Pune" },
-      mr: { service: "पुणे शहर पोलीस नियंत्रण", address: "कॅम्प, पुणे" },
-      hi: { service: "पुणे शहर पुलिस नियंत्रण", address: "कैंप, पुणे" },
-    },
-  },
-  {
-    category: "Local Police",
-    phone: "02027652727",
-    lat: 18.6277,
-    lon: 73.801,
-    translations: {
-      en: {
-        service: "Pimpri-Chinchwad Police",
-        address: "PCMC Main Building, Pimpri",
-      },
-      mr: {
-        service: "पिंपरी-चिंचवड पोलीस",
-        address: "पीसीएमसी मुख्य इमारत, पिंपरी",
-      },
-      hi: {
-        service: "पिंपरी-चिंचवड पुलिस",
-        address: "पीसीएमसी मुख्य भवन, पिंपरी",
-      },
-    },
-  },
-  {
-    category: "Local Police",
-    phone: "02025657171",
-    lat: 18.5179,
-    lon: 73.8329,
-    translations: {
-      en: {
-        service: "Deccan Police Station",
-        address: "Deccan Gymkhana",
-      },
-      mr: { service: "डेक्कन पोलीस स्टेशन", address: "डेक्कन जिमखाना" },
-      hi: { service: "डेक्कन पुलिस स्टेशन", address: "डेक्कन जिमखाना" },
-    },
-  },
-  {
-    category: "Local Police",
-    phone: "02025380101",
-    lat: 18.5074,
-    lon: 73.8095,
-    translations: {
-      en: {
-        service: "Kothrud Police Station",
-        address: "Near MIT College, Kothrud",
-      },
-      mr: {
-        service: "कोथरूड पोलीस स्टेशन",
-        address: "एमआयटी कॉलेज जवळ, कोथरूड",
-      },
-      hi: {
-        service: "कोथरुड पुलिस स्टेशन",
-        address: "एमआईटी कॉलेज के पास, कोथरुड",
-      },
-    },
-  },
-  {
-    category: "Medical",
-    phone: "02026128000",
-    lat: 18.528,
-    lon: 73.871,
-    translations: {
-      en: {
-        service: "Sassoon General Hospital",
-        address: "Station Road, Pune",
-      },
-      mr: {
-        service: "ससून सर्वोपचार रुग्णालय",
-        address: "स्टेशन रोड, पुणे",
-      },
-      hi: { service: "ससून जनरल अस्पताल", address: "स्टेशन रोड, पुणे" },
-    },
-  },
-  {
-    category: "Medical",
-    phone: "02067332222",
-    lat: 18.6279,
-    lon: 73.8143,
-    translations: {
-      en: { service: "YCM Hospital, PCMC", address: "Pimpri, PCMC" },
-      mr: {
-        service: "यशवंतराव चव्हाण रुग्णालय",
-        address: "पिंपरी, पिंपरी-चिंचवड",
-      },
-      hi: {
-        service: "वाईसीएम अस्पताल, पीसीएमसी",
-        address: "पिंपरी, पीसीएमसी",
-      },
-    },
-  },
-  {
-    category: "Medical",
-    phone: "02040151000",
-    lat: 18.5015,
-    lon: 73.8213,
-    translations: {
-      en: {
-        service: "Deenanath Mangeshkar Hospital",
-        address: "Erandwane, Pune",
-      },
-      mr: {
-        service: "दीनानाथ मंगेशकर रुग्णालय",
-        address: "एरंडवणे, पुणे",
-      },
-      hi: {
-        service: "दीनानाथ मंगेशकर अस्पताल",
-        address: "एरंडवाने, पुणे",
-      },
-    },
-  },
-  {
-    category: "Medical",
-    phone: "02025881230",
-    lat: 18.563,
-    lon: 73.8068,
-    translations: {
-      en: {
-        service: "Aundh District Hospital",
-        address: "Aundh Camp, Pune",
-      },
-      mr: { service: "औंध जिल्हा रुग्णालय", address: "औंध कॅम्प, पुणे" },
-      hi: { service: "औंध जिला अस्पताल", address: "औंध कैंप, पुणे" },
-    },
-  },
-  {
-    category: "Blood Banks",
-    phone: "02024449591",
-    lat: 18.5135,
-    lon: 73.8475,
-    translations: {
-      en: {
-        service: "Janakalyan Raktapedhi",
-        address: "Narayan Peth, Pune",
-      },
-      mr: { service: "जनकल्याण रक्तपेढी", address: "नारायण पेठ, पुणे" },
-      hi: { service: "जनकल्याण रक्तपेढी", address: "नारायण पेठ, पुणे" },
-    },
-  },
-  {
-    category: "Blood Banks",
-    phone: "02066455100",
-    lat: 18.5269,
-    lon: 73.8722,
-    translations: {
-      en: {
-        service: "Ruby Hall Clinic Blood Bank",
-        address: "Sassoon Road, Pune",
-      },
-      mr: {
-        service: "रुबी हॉल क्लिनिक रक्तपेढी",
-        address: "ससून रोड, पुणे",
-      },
-      hi: {
-        service: "रूबी हॉल क्लिनिक ब्लड बैंक",
-        address: "ससून रोड, पुणे",
-      },
-    },
-  },
-  {
-    category: "Helplines",
-    phone: "1091",
-    lat: 0,
-    lon: 0,
-    translations: {
-      en: {
-        service: "Women Helpline",
-        address: "National Helpline for Women",
-      },
-      mr: {
-        service: "महिला हेल्पलाइन",
-        address: "महिलांसाठी राष्ट्रीय हेल्पलाइन",
-      },
-      hi: {
-        service: "महिला हेल्पलाइन",
-        address: "महिलाओं के लिए राष्ट्रीय हेल्पलाइन",
-      },
-    },
-  },
-  {
-    category: "Helplines",
-    phone: "1098",
-    lat: 0,
-    lon: 0,
-    translations: {
-      en: {
-        service: "Child Helpline",
-        address: "National Helpline for Children",
-      },
-      mr: {
-        service: "चाइल्ड हेल्पलाइन",
-        address: "मुलांसाठी राष्ट्रीय हेल्पलाइन",
-      },
-      hi: {
-        service: "चाइल्ड हेल्पलाइन",
-        address: "बच्चों के लिए राष्ट्रीय हेल्पलाइन",
-      },
-    },
-  },
-  {
-    category: "Helplines",
-    phone: "1800222262",
-    lat: 0,
-    lon: 0,
-    translations: {
-      en: {
-        service: "State Consumer Helpline",
-        address: "For consumer complaints",
-      },
-      mr: {
-        service: "राज्य ग्राहक हेल्पलाइन",
-        address: "ग्राहक तक्रारींसाठी",
-      },
-      hi: {
-        service: "राज्य उपभोक्ता हेल्पलाइन",
-        address: "उपभोक्ता शिकायतों के लिए",
-      },
-    },
-  },
-  {
-    category: "Civic Services",
-    phone: "02025501000",
-    lat: 18.531,
-    lon: 73.8447,
-    translations: {
-      en: { service: "PMC Head Office", address: "Shivajinagar, Pune" },
-      mr: { service: "पुणे महानगरपालिका", address: "शिवाजीनगर, पुणे" },
-      hi: { service: "पीएमसी मुख्यालय", address: "शिवाजीनगर, पुणे" },
-    },
-  },
-  {
-    category: "Civic Services",
-    phone: "8888006666",
-    lat: 18.6277,
-    lon: 73.801,
-    translations: {
-      en: {
-        service: "PCMC Sarathi Helpline",
-        address: "PCMC Integrated Helpline",
-      },
-      mr: {
-        service: "पिंपरी-चिंचवड सारथी हेल्पलाइन",
-        address: "पिंपरी-चिंचवड एकात्मिक हेल्पलाइन",
-      },
-      hi: {
-        service: "पीसीएमसी सारथी हेल्पलाइन",
-        address: "पीसीएमसी एकीकृत हेल्पलाइन",
-      },
-    },
-  },
-  {
-    category: "Civic Services",
-    phone: "18001030222",
-    lat: 18.531,
-    lon: 73.8447,
-    translations: {
-      en: {
-        service: "PMC Complaint Number",
-        address: "For civic issues",
-      },
-      mr: {
-        service: "पुणे मनपा तक्रार क्रमांक",
-        address: "नागरी समस्यांसाठी",
-      },
-      hi: {
-        service: "पीएमसी शिकायत संख्या",
-        address: "नागरिक मुद्दों के लिए",
-      },
-    },
-  },
-  {
-    category: "Civic Services",
-    phone: "02025601258",
-    lat: 18.5612,
-    lon: 73.7844,
-    translations: {
-      en: { service: "Passport Seva Kendra", address: "Mundhwa, Pune" },
-      mr: { service: "पासपोर्ट सेवा केंद्र", address: "मुंढवा, पुणे" },
-      hi: { service: "पासपोर्ट सेवा केंद्र", address: "मुंढवा, पुणे" },
-    },
-  },
-  {
-    category: "Utilities",
-    phone: "1912",
-    lat: 0,
-    lon: 0,
-    translations: {
-      en: {
-        service: "MSEDCL (Electricity)",
-        address: "Statewide Electricity Board",
-      },
-      mr: { service: "महावितरण (वीज)", address: "राज्यव्यापी वीज मंडळ" },
-      hi: {
-        service: "एमएसईडीसीएल (बिजली)",
-        address: "राज्यव्यापी बिजली बोर्ड",
-      },
-    },
-  },
-  {
-    category: "Utilities",
-    phone: "02025501383",
-    lat: 18.531,
-    lon: 73.8447,
-    translations: {
-      en: { service: "PMC Water Supply", address: "Shivajinagar, Pune" },
-      mr: {
-        service: "पुणे मनपा पाणी पुरवठा",
-        address: "शिवाजीनगर, पुणे",
-      },
-      hi: { service: "पीएमसी जलापूर्ति", address: "शिवाजीनगर, पुणे" },
-    },
-  },
-  {
-    category: "Transport",
-    phone: "139",
-    lat: 18.5276,
-    lon: 73.8732,
-    translations: {
-      en: {
-        service: "Pune Railway Station",
-        address: "Station Road, Pune",
-      },
-      mr: { service: "पुणे रेल्वे स्टेशन", address: "स्टेशन रोड, पुणे" },
-      hi: { service: "पुणे रेलवे स्टेशन", address: "स्टेशन रोड, पुणे" },
-    },
-  },
-  {
-    category: "Transport",
-    phone: "02026683232",
-    lat: 18.5786,
-    lon: 73.9088,
-    translations: {
-      en: { service: "Pune Airport", address: "Lohegaon, Pune" },
-      mr: { service: "पुणे विमानतळ", address: "लोहगाव, पुणे" },
-      hi: { service: "पुणे हवाई अड्डा", address: "लोहेगांव, पुणे" },
-    },
-  },
-  {
-    category: "Transport",
-    phone: "18002705501",
-    lat: 0,
-    lon: 0,
-    translations: {
-      en: {
-        service: "Pune Metro (Maha Metro)",
-        address: "Customer Care Helpline",
-      },
-      mr: {
-        service: "पुणे मेट्रो (महा मेट्रो)",
-        address: "ग्राहक सेवा हेल्पलाइन",
-      },
-      hi: {
-        service: "पुणे मेट्रो (महा मेट्रो)",
-        address: "ग्राहक सेवा हेल्पलाइन",
-      },
-    },
-  },
-  {
-    category: "Transport",
-    phone: "02024442244",
-    lat: 18.499,
-    lon: 73.8617,
-    translations: {
-      en: {
-        service: "Swargate MSRTC Bus Stand",
-        address: "Swargate, Pune",
-      },
-      mr: {
-        service: "स्वारगेट MSRTC बस स्टँड",
-        address: "स्वारगेट, पुणे",
-      },
-      hi: {
-        service: "स्वारगेट MSRTC बस स्टैंड",
-        address: "स्वारगेट, पुणे",
-      },
-    },
-  },
-  {
-    category: "Transport",
-    phone: "02025536970",
-    lat: 18.5385,
-    lon: 73.8407,
-    translations: {
-      en: {
-        service: "Shivajinagar MSRTC Bus Stand",
-        address: "Wakdewadi, Shivajinagar",
-      },
-      mr: {
-        service: "शिवाजीनगर MSRTC बस स्टँड",
-        address: "वाकडेवाडी, शिवाजीनगर",
-      },
-      hi: {
-        service: "शिवाजीनगर MSRTC बस स्टैंड",
-        address: "वाकडेवाडी, शिवाजीनगर",
-      },
-    },
-  },
-  {
-    category: "Animal Care",
-    phone: "9890999111",
-    lat: 18.5085,
-    lon: 73.7699,
-    translations: {
-      en: { service: "ResQ Charitable Trust", address: "Bavdhan, Pune" },
-      mr: { service: "रेस्क्यू चॅरिटेबल ट्रस्ट", address: "बावधन, पुणे" },
-      hi: {
-        service: "रेस्क्यू चैरिटेबल ट्रस्ट",
-        address: "बावधान, पुणे",
-      },
-    },
-  },
-  {
-    category: "Animal Care",
-    phone: "9552552355",
-    lat: 18.4839,
-    lon: 73.7997,
-    translations: {
-      en: { service: "Karma Foundation", address: "Warje, Pune" },
-      mr: { service: "कर्मा फाउंडेशन", address: "वारजे, पुणे" },
-      hi: { service: "कर्मा फाउंडेशन", address: "वारजे, पुणे" },
-    },
-  },
-  {
-    category: "Animal Care",
-    phone: "02024376186",
-    lat: 18.4496,
-    lon: 73.8415,
-    translations: {
-      en: {
-        service: "Katraj Snake Park & Rescue",
-        address: "Katraj, Pune",
-      },
-      mr: {
-        service: "कात्रज सर्प उद्यान आणि बचाव",
-        address: "कात्रज, पुणे",
-      },
-      hi: {
-        service: "कात्रज सर्प उद्यान और बचाव",
-        address: "कात्रज, पुणे",
-      },
-    },
-  },
-  {
-    category: "Education",
-    phone: "02025696061",
-    lat: 18.5535,
-    lon: 73.8245,
-    translations: {
-      en: {
-        service: "Savitribai Phule Pune University",
-        address: "Ganeshkhind, Pune",
-      },
-      mr: {
-        service: "सावित्रीबाई फुले पुणे विद्यापीठ",
-        address: "गणेशखिंड, पुणे",
-      },
-      hi: {
-        service: "सावित्रीबाई फुले पुणे विश्वविद्यालय",
-        address: "गणेशखिंड, पुणे",
-      },
-    },
-  },
-  {
-    category: "Education",
-    phone: "02025705000",
-    lat: 18.531,
-    lon: 73.8447,
-    translations: {
-      en: {
-        service: "SSC/HSC Board Office, Pune",
-        address: "Shivajinagar, Pune",
-      },
-      mr: {
-        service: "SSC/HSC बोर्ड कार्यालय, पुणे",
-        address: "शिवाजीनगर, पुणे",
-      },
-      hi: {
-        service: "SSC/HSC बोर्ड कार्यालय, पुणे",
-        address: "शिवाजीनगर, पुणे",
-      },
+      en: { service: "Fire Brigade", address: "India" },
+      mr: { service: "अग्निशमन दल", address: "भारत" },
+      hi: { service: "फायर ब्रिगेड", address: "भारत" },
     },
   },
 ];
+
+// Country-specific service patterns
+export const countryServicePatterns = {
+  US: {
+    police: "911",
+    fire: "911",
+    medical: "911",
+    poison: "1-800-222-1222",
+  },
+  UK: {
+    police: "999",
+    fire: "999",
+    medical: "999",
+    nonEmergencyPolice: "101",
+    nonEmergencyMedical: "111",
+  },
+  AU: {
+    police: "000",
+    fire: "000",
+    medical: "000",
+    poisonInfo: "13 11 26",
+  },
+  CA: {
+    police: "911",
+    fire: "911",
+    medical: "911",
+    poisonControl: "1-844-764-7669",
+  },
+  IN: {
+    police: "100",
+    fire: "101",
+    medical: "108",
+    disaster: "1077",
+    women: "1091",
+    child: "1098",
+  },
+  DE: {
+    police: "110",
+    fire: "112",
+    medical: "112",
+  },
+  FR: {
+    police: "17",
+    fire: "18",
+    medical: "15",
+    european: "112",
+  },
+  JP: {
+    police: "110",
+    fire: "119",
+    medical: "119",
+  },
+  CN: {
+    police: "110",
+    fire: "119",
+    medical: "120",
+  },
+};
+
+// This will be populated with location-specific data
+export let helplineData = [...globalEmergencyNumbers];
+
+// Function to get country code from coordinates using a reverse geocoding service
+export async function getCountryFromCoordinates(lat, lon) {
+  try {
+    // Using a free geocoding service (you might want to use a more reliable one in production)
+    const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+    const data = await response.json();
+    return data.countryCode;
+  } catch (error) {
+    console.error('Error getting country:', error);
+    return null;
+  }
+}
+
+// Function to generate services based on country
+export function generateCountryServices(countryCode, lat, lon, locationName) {
+  const services = [];
+  const patterns = countryServicePatterns[countryCode];
+  
+  if (!patterns) return services;
+
+  // Add country-specific emergency services
+  Object.entries(patterns).forEach(([serviceType, phone]) => {
+    let category, serviceKey;
+    
+    switch (serviceType) {
+      case 'police':
+      case 'nonEmergencyPolice':
+        category = 'Police';
+        serviceKey = serviceType === 'police' ? 'Emergency Police' : 'Non-Emergency Police';
+        break;
+      case 'fire':
+        category = 'Fire Department';
+        serviceKey = 'Fire Emergency';
+        break;
+      case 'medical':
+      case 'nonEmergencyMedical':
+        category = 'Medical';
+        serviceKey = serviceType === 'medical' ? 'Emergency Medical' : 'Non-Emergency Medical';
+        break;
+      case 'poison':
+      case 'poisonInfo':
+      case 'poisonControl':
+        category = 'Medical';
+        serviceKey = 'Poison Control';
+        break;
+      case 'disaster':
+        category = 'Emergency';
+        serviceKey = 'Disaster Management';
+        break;
+      case 'women':
+        category = 'Helplines';
+        serviceKey = 'Women Helpline';
+        break;
+      case 'child':
+        category = 'Helplines';
+        serviceKey = 'Child Helpline';
+        break;
+      default:
+        category = 'Emergency';
+        serviceKey = serviceType;
+    }
+
+    services.push({
+      category,
+      phone,
+      lat,
+      lon,
+      translations: {
+        en: { 
+          service: serviceKey, 
+          address: locationName || `${countryCode} - Local Service` 
+        },
+        mr: { 
+          service: serviceKey, 
+          address: locationName || `${countryCode} - स्थानिक सेवा` 
+        },
+        hi: { 
+          service: serviceKey, 
+          address: locationName || `${countryCode} - स्थानीय सेवा` 
+        },
+      },
+    });
+  });
+
+  return services;
+}
+
+// Function to update helpline data based on location
+export async function updateHelplineDataForLocation(lat, lon) {
+  try {
+    // Get location information
+    const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+    const locationData = await response.json();
+    
+    const countryCode = locationData.countryCode;
+    const locationName = `${locationData.city || locationData.locality || 'Unknown City'}, ${locationData.countryName || countryCode}`;
+    
+    // Generate country-specific services
+    const countryServices = generateCountryServices(countryCode, lat, lon, locationName);
+    
+    // Combine global emergency numbers with country-specific services
+    helplineData = [
+      ...globalEmergencyNumbers,
+      ...countryServices
+    ];
+    
+    return { countryCode, locationName };
+  } catch (error) {
+    console.error('Error updating helpline data:', error);
+    helplineData = [...globalEmergencyNumbers];
+    return null;
+  }
+}
